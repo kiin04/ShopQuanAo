@@ -1,0 +1,29 @@
+﻿
+@{
+    Layout = null;
+}
+
+<link href="~/Content/css/profile.css" rel="stylesheet" />
+
+@Html.Partial("_Header")
+<div class="profile-container">
+    <h2>Thông Tin Cá Nhân</h2>
+
+    <div class="profile-pic">
+        <img src="@(Session["Avatar"] ?? "/Content/images/7.jpg")" alt="Avatar" />
+    </div>
+
+
+    <div class="profile-info">
+        <p><strong>Họ và Tên:</strong> @Session["FullName"]</p>
+        <p><strong>Email:</strong> @Model.Email</p>
+        <p><strong>Số Điện Thoại:</strong> @(Session["Phone"] ?? "Chưa cập nhật")</p>
+        <p><strong>Địa Chỉ:</strong> @(Session["Address"] ?? "Chưa cập nhật")</p>
+        <p><strong>Vai trò:</strong> @(Session["Role"] != null ? Session["Role"].ToString() : "Admin")</p>
+    </div>
+
+    <div class="profile-actions">
+        <a href="@Url.Action("EditProfile", "Profile")" class="btn-edit">Chỉnh Sửa</a>
+        <a href="@Url.Action("Logout", "Login")" class="btn-logout">Đăng Xuất</a>
+    </div>
+</div>

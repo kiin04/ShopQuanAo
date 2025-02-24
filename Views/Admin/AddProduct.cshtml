@@ -1,0 +1,69 @@
+﻿@model WebMusic.Models.Product
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddProduct</title>
+    <link rel="stylesheet" href="~/Content/css/addcategory.css" /> <!-- Đảm bảo đường dẫn đúng -->
+    <script src="~/Content/js/previewimage.js"></script>
+
+</head>
+<body>
+    <div class="container">
+        <h4>Thêm Sản Phẩm</h4>
+
+        @using (Html.BeginForm("AddProduct", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ProductName)
+                @Html.TextBoxFor(model => model.ProductName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Danh Mục")
+                @Html.DropDownList("CategoryID", ViewBag.Categories as SelectList, "Chọn danh mục", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CategoryID, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Price)
+                @Html.TextBoxFor(model => model.Price, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Stock)
+                @Html.TextBoxFor(model => model.Stock, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Stock, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Description)
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control fixed-textarea", rows = 5 })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+
+
+            <div class="form-group">
+                @Html.Label("Hình ảnh sản phẩm")
+                <input type="file" name="imageFile" id="imageFile" class="form-control" accept="image/*" required />
+
+                <img id="imagePreview" src="#" alt="Xem trước" class="img-preview" style="max-width: 200px; display: none; margin-top: 10px;" />
+            </div>
+
+            <button type="submit" class="btn btn-default">Thêm sản phẩm</button>
+        }
+
+        <a href="@Url.Action("ManageProduct", "Admin")" class="back-link">Quay lại danh sách</a>
+    </div>
+</body>
+</html>

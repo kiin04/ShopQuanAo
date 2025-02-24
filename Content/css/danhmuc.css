@@ -1,0 +1,118 @@
+﻿/* Thiết lập font chữ mặc định */
+body {
+    font-family: Arial, sans-serif; /* Có thể đổi thành 'Roboto', 'Open Sans' nếu muốn */
+    font-size: 16px;
+    color: #333;
+}
+
+/* Tạo khoảng cách giữa nội dung và Header/Footer */
+.content-wrapper {
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
+
+/* Định dạng tổng thể */
+.container {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+/* Sidebar bộ lọc */
+.sidebar {
+    width: 250px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+    /* Dropdown bộ lọc */
+    .sidebar select {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background: white;
+        cursor: pointer;
+    }
+
+        /* Khi focus vào dropdown */
+        .sidebar select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+/* Danh sách sản phẩm */
+.product-list {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start;
+}
+
+/* Sản phẩm */
+.product-item {
+    width: calc(20% - 50px); /* 5 sản phẩm trên 1 hàng, trừ đi khoảng cách */
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out, box-shadow 0.3s ease;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+    /* Hover sản phẩm */
+    .product-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+/* Ảnh sản phẩm */
+.product-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+/* Tên sản phẩm */
+.product-item h3 {
+    font-size: 16px;
+    margin: 10px 0;
+    font-weight: bold;
+    flex-grow: 1; /* Đảm bảo tên sản phẩm không làm thay đổi vị trí nút */
+}
+
+/* Giá sản phẩm */
+.product-item p {
+    font-size: 14px;
+    color: red;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Căn chỉnh nút "Xem ngay" đều nhau */
+.product-item .btn {
+    display: block;
+    width: 75%;
+    padding: 10px;
+    font-size: 14px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background 0.3s;
+    margin-top: auto; /* Căn nút xuống đáy để tất cả sản phẩm đồng đều */
+}
+
+    /* Hover nút "Xem ngay" */
+    .product-item .btn:hover {
+        background-color: #0056b3;
+    }

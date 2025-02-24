@@ -1,0 +1,85 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 50%;
+    margin: 80px auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    text-align: center;
+}
+
+h4 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"] {
+    width: 97%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.text-danger {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-default {
+    background: #007bff;
+    color: white;
+}
+
+    .btn-default:hover {
+        background: #0056b3;
+    }
+
+.back-link {
+    display: block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #555;
+    font-size: 16px;
+}
+
+    .back-link:hover {
+        color: #007bff;
+    }
+
+.fixed-textarea {
+    resize: none; /* Ngăn không cho người dùng thay đổi kích thước */
+    height: 120px; /* Chiều cao cố định */
+    width: 100%; /* Đảm bảo chiều rộng đầy đủ */
+    overflow-y: auto; /* Hiển thị thanh cuộn khi nội dung quá dài */
+}

@@ -1,0 +1,70 @@
+﻿
+@{
+    Layout = null;
+}
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ManageProduct</title>
+    <link rel="stylesheet" href="~/Content/css/manageproduct.css" />
+    <script src="~/Content/js/successmessage.js"></script>
+
+</head>
+@Html.Partial("_HeaderAdmin")
+
+<div class="main-content">
+
+    @if (Model.Count > 0)
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Danh mục</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Mô tả</th>
+                    <th>Ảnh</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div id="success-message" class="alert-success">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+            <tbody>
+                @{ int stt = 1; }
+                @foreach (var product in Model)
+                {
+                    <tr>
+                        <td>@stt</td>
+                        <td>@product.ProductName</td>
+                        <td>@product.Category.CategoryName</td>
+                        <td>@product.Price.ToString("N0") VNĐ</td>
+                        <td>@product.Stock</td>
+                        <td>@product.Description</td>
+                        <td>
+                            <img src="@Url.Content(product.ImageURL)" width="50" height="50" onerror="this.onerror=null;this.src='/Content/images/no-image.png';" />
+                        </td>
+                        <td>
+                            <a href="@Url.Action("EditProduct", "Admin", new { id = product.ProductID })" class="btn btn-warning">Sửa</a>
+                            <form action="@Url.Action("DeleteProduct", "Admin")" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="@product.ProductID" />
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                    stt++;
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="text-center text-muted">Chưa có sản phẩm nào.</p>
+    }
+
+    <a href="@Url.Action("AddProduct", "Admin")" class="btn btn-primary">Thêm sản phẩm</a>
+</div>

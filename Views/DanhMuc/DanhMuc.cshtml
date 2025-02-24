@@ -1,0 +1,76 @@
+﻿
+@{
+    Layout = null;
+}
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DanhMuc</title>
+    <link rel="stylesheet" href="~/Content/css/danhmuc.css" />
+
+</head>
+@Html.Partial("_Header")
+
+<div class="content-wrapper">
+    <div class="container mt-4 d-flex">
+        <!-- Bộ lọc bên trái -->
+        <div class="sidebar">
+            <h3>Danh Mục</h3>
+            <select id="categoryFilter" class="form-control">
+                <option value="0" @(ViewBag.SelectedCategoryId == null ? "selected" : "")>Tất Cả</option>
+                @foreach (var category in ViewBag.Categories)
+                {
+                    <option value="@category.CategoryID" @(ViewBag.SelectedCategoryId == category.CategoryID ? "selected" : "")>
+                        @category.CategoryName
+                    </option>
+                }
+            </select>
+
+            <!-- Lọc theo giá -->
+            <div class="filter-group mt-3">
+                <h4>Giá</h4>
+                <select id="priceFilter" class="form-control">
+                    <option value="" @(ViewBag.SelectedSort == null ? "selected" : "")>Chọn mức giá</option>
+                    <option value="price_asc" @(ViewBag.SelectedSort == "price_asc" ? "selected" : "")>Thấp → Cao</option>
+                    <option value="price_desc" @(ViewBag.SelectedSort == "price_desc" ? "selected" : "")>Cao → Thấp</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Danh sách sản phẩm -->
+        <div class="product-list">
+            @foreach (var product in Model)
+            {
+                <div class="product-item text-center">
+                    <img src="@Url.Content(product.ImageURL)" alt="@product.ProductName" class="product-image">
+                    <h3>@product.ProductName</h3>
+                    <p>Giá: @product.Price.ToString("N0") VNĐ</p>
+                    <a href="/product/details/@product.ProductID" class="btn btn-primary">Xem ngay</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_Footer")
+
+<script>
+    function applyFilters() {
+        var categoryId = document.getElementById("categoryFilter").value;
+        var sortOrder = document.getElementById("priceFilter").value;
+
+        var url = "/DanhMuc/DanhMuc?";
+        if (categoryId !== "0") {
+            url += "categoryId=" + categoryId + "&";
+        }
+        if (sortOrder) {
+            url += "sortOrder=" + sortOrder;
+        }
+
+        window.location.href = url;
+    }
+
+    document.getElementById("categoryFilter").addEventListener("change", applyFilters);
+    document.getElementById("priceFilter").addEventListener("change", applyFilters);
+</script>
+

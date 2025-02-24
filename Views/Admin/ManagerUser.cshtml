@@ -1,0 +1,89 @@
+﻿@model List<WebMusic.Models.UserViewModel>
+
+@{
+    Layout = null;
+}
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ManagerUser</title>
+    <link rel="stylesheet" href="~/Content/css/manageproduct.css" />
+    <script src="~/Content/js/successmessage.js"></script>
+</head>
+
+@Html.Partial("_HeaderAdmin")
+
+<div class="main-content">
+    @if (Model != null && Model.Any())
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Họ và Tên</th>
+                    <th>Email</th>
+                    <th>SĐT</th>
+                    <th>Địa Chỉ</th>
+                    <th>Vai Trò</th>
+                    <th>Avatar</th>
+                    <th>Hành Động</th>
+                </tr>
+            </thead>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div id="success-message" class="alert-success">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div id="error-message" class="alert alert-danger">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+
+            <tbody>
+                @{ int stt = 1; }
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@stt</td>
+                        <td>@user.FullName</td>
+                        <td>@user.Email</td>
+                        <td>@user.Phone</td>
+                        <td>@user.Address</td>
+                        <td>
+                            @if (user.Role == "Admin")
+                            {
+                                <span class="badge badge-danger">Quản trị viên</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-primary">Khách hàng</span>
+                            }
+                        </td>
+                        <td>
+                            <img src="@user.Avatar" width="50" height="50" />
+                        </td>
+                        <td>
+                            <a href="@Url.Action("EditCustomer", "Admin", new { id = user.ID })" class="btn btn-warning">Sửa</a>
+                            <form action="@Url.Action("DeleteCustomer", "Admin")" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="@user.ID" />
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này?');">Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                    stt++;
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="text-center text-muted">Chưa có người dùng nào.</p>
+    }
+
+    <a href="@Url.Action("AddCustomer", "Admin")" class="btn btn-primary">Thêm khách hàng</a>
+</div>
+

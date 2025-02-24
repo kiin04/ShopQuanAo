@@ -1,0 +1,22 @@
+﻿/* Đảm bảo body và html chiếm toàn bộ chiều cao */
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Phần nội dung chính */
+.content {
+    flex: 1; /* Đảm bảo phần nội dung chiếm hết không gian còn lại */
+}
+
+/* Footer */
+footer {
+    background-color: black;
+    padding: 15px 0;
+    text-align: center;
+    font-size: 1rem;
+    color: #fff;
+    margin-top: auto; /* Đẩy footer xuống dưới */
+}

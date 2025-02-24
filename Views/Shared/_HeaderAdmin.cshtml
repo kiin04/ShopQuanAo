@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Header</title>
+    <link rel="stylesheet" href="~/Content/css/headeradmin.css" />
+</head>
+<body>
+
+    <header class="admin-header">
+        <div class="logo">Admin Panel</div>
+        <ul class="admin-nav">
+            <li><a href="@Url.Action("Home", "Home")">Trang Chủ</a></li>
+            <li><a href="@Url.Action("Dashboard", "Admin")">Dashboard</a></li>
+            <li><a href="@Url.Action("ManagerUser", "Admin")">Quản Lý Người Dùng</a></li>
+            <li><a href="@Url.Action("ManageProduct", "Admin")">Quản Lý Sản Phẩm</a></li>
+            <li><a href="@Url.Action("ManageCategory", "Admin")">Quản Lý Danh Mục</a></li>
+            <li><a href="@Url.Action("ManageSupplier", "Admin")">Quản Lý Nhà Cung Cấp</a></li>
+            <li><a href="@Url.Action("ManageOrder", "Admin")">Quản Lý Đơn Hàng</a></li>
+        </ul>
+        <div class="admin-profile">
+            <span>Admin</span>
+            <img src="@(Session["Avatar"] ?? "/Content/images/7.jpg")" alt="Avatar" />
+        </div>
+    </header>
+
+</body>
+</html>
+

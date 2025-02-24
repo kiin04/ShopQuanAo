@@ -1,0 +1,65 @@
+﻿body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+.profile-container {
+    width: 50%;
+    margin: 80px auto 40px; /* Điều chỉnh margin-top để tránh bị che bởi header */
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    border-radius: 10px;
+}
+
+.profile-pic img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    margin-left: 30px;
+}
+
+.profile-info {
+    margin-top: -50px;
+}
+
+    .profile-info p {
+        font-size: 16px;
+        margin: 8px 0;
+        color: #333;
+    }
+
+.profile-actions {
+    margin-top: 20px;
+}
+
+.btn-edit, .btn-logout {
+    display: inline-block;
+    padding: 12px 25px;
+    margin: 10px;
+    text-decoration: none;
+    color: #fff;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.btn-edit {
+    background: #007bff;
+}
+
+    .btn-edit:hover {
+        background: #0056b3;
+    }
+
+.btn-logout {
+    background: #dc3545;
+}
+
+    .btn-logout:hover {
+        background: #a71d2a;
+    }

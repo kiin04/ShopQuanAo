@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/HomePage.cshtml";
+}
+<link rel="stylesheet" href="~/Content/css/style.css" />
+
+<body>
+    <header>
+        @Html.Partial("_Header")
+    </header>
+
+    <main class="container mt-4">
+        <h1 class="text-center">Chào mừng bạn đến với Web ABCXYZ</h1>
+        <p class="text-center">Khám phá hàng ngàn sản phẩm bạn cần.</p>
+        <div class="text-center">
+            <a href="@Url.Action("DanhMuc", "DanhMuc")" class="btn btn-success">Bắt đầu mua sắm</a>
+        </div>
+    </main>
+    <div class="product-categories">
+        @{
+            bool hasOther = false; // Cờ kiểm tra xem có danh mục khác ngoài 4 loại chính không
+        }
+
+        @foreach (var category in ViewBag.Categories)
+        {
+            var imagePath = "";
+            bool isOther = true; // Giả định danh mục này là "Khác"
+
+            if (category.CategoryName.Contains("Áo")) { imagePath = "/Content/images/shirt.png"; isOther = false; }
+            else if (category.CategoryName.Contains("Quần")) { imagePath = "/Content/images/pants.png"; isOther = false; }
+            else if (category.CategoryName.Contains("Váy")) { imagePath = "/Content/images/skirt.png"; isOther = false; }
+            else if (category.CategoryName.Contains("Giày")) { imagePath = "/Content/images/shoes.png"; isOther = false; }
+
+            if (!isOther)
+            {
+                <a href="@Url.Action("DanhMuc", "DanhMuc", new { categoryId = category.CategoryID })" class="category-link">
+                    <div class="category-item">
+                        <img src="@imagePath" alt="@category.CategoryName">
+                        <p>@category.CategoryName</p>
+                    </div>
+                </a>
+            }
+            else
+            {
+                hasOther = true; // Đánh dấu rằng có danh mục khác
+            }
+        }
+
+        @if (hasOther)
+        {
+            <a href="@Url.Action("DanhMuc", "DanhMuc", new { categoryId = "other" })" class="category-link">
+                <div class="category-item">
+                    <img src="/Content/images/more.png" alt="More">
+                    <p>Khác</p>
+                </div>
+            </a>
+        }
+    </div>
+
+    <div class="featured-products">
+        <h2 class="text-center">Sản phẩm Nổi Bật</h2>
+        <div class="product-list d-flex justify-content-center flex-wrap">
+            @foreach (var product in ViewBag.Products)
+            {
+                <div class="product-item text-center">
+                    <img src="@Url.Content(product.ImageURL)" alt="@product.ProductName" class="product-image">
+                    <h3>@product.ProductName</h3>
+                    <p>Giá: @product.Price.ToString("N0") VNĐ</p>
+                    <a href="/Detail/Detail/@product.ProductID" class="btn btn-primary">Xem ngay</a>
+                </div>
+            }
+        </div>
+    </div>
+
+
+</body>
+    @Html.Partial("_Footer")
+
