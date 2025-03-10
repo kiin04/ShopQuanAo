@@ -1,0 +1,80 @@
+﻿@{
+    Layout = null;
+}
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Thanh Toán</title>
+    <link rel="stylesheet" href="~/Content/css/thanhtoan.css" />
+</head>
+
+@Html.Partial("_Header")
+
+<h2>Thanh Toán</h2>
+
+<div class="checkout-container">
+    <!-- Cột trái: Thông tin khách hàng -->
+    <div class="customer-info">
+        <h3>Thông tin nhận hàng</h3>
+        <form method="post" action="/Checkout/ConfirmOrder" id="confirm-order-form">
+            <label>Họ và tên:</label>
+            <input type="text" name="FullName" value="@ViewBag.FullName" required />
+
+            <label>Email:</label>
+            <input type="text" name="Email" value="@ViewBag.Email" required />
+
+            <label>Địa chỉ:</label>
+            <input type="text" name="Address" value="@ViewBag.Address" required />
+
+            <label>Số điện thoại:</label>
+            <input type="text" name="PhoneNumber" value="@ViewBag.PhoneNumber" required />
+
+            <!-- Chọn phương thức thanh toán bằng dropdown -->
+            <label>Phương thức thanh toán:</label>
+            <select name="PaymentMethod" required>
+                <option value="COD">Thanh toán khi nhận hàng (COD)</option>
+                <option value="Online">Thanh toán online (Ví điện tử / Thẻ ngân hàng)</option>
+            </select>
+
+            <button type="submit" class="btn-confirm">Xác nhận đặt hàng</button>
+        </form>
+        <!-- Nút trở lại giỏ hàng -->
+        <a href="/Cart/Cart" class="btn-back-cart">← Trở lại giỏ hàng</a>
+    </div>
+
+    <!-- Cột phải: Thông tin sản phẩm -->
+    <div class="order-summary">
+        <h3>Chi tiết đơn hàng</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Hình ảnh</th>
+                    <th>Sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Giá</th>
+                    <th>Tổng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.CartItems)
+                {
+                    <tr>
+                        <td>
+                            <img src="@item.Product.ImageURL" alt="@item.Product.ProductName" class="cart-product-image">
+                        </td>
+                        <td>@item.Product.ProductName</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Product.Price.ToString("N0") VNĐ</td>
+                        <td>@((item.Quantity * item.Product.Price).ToString("N0")) VNĐ</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <h3>Tổng tiền: <span>@ViewBag.TotalAmount.ToString("N0") VNĐ</span></h3>
+    </div>
+</div>
+
+@Html.Partial("_Footer")
+
+
+

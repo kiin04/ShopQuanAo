@@ -1,0 +1,32 @@
+﻿@model WebMusic.Models.Order
+<link rel="stylesheet" href="~/Content/css/orderdetail.css" />
+
+<div id="orderDetailsContent">
+    <h4>Chi Tiết Đơn Hàng #@Model.OrderID</h4>
+    <p><strong>Ngày mua:</strong> @(Model.OrderDate.HasValue ? Model.OrderDate.Value.ToString("dd/MM/yyyy") : "Chưa có thông tin")</p>
+    <p><strong>Tổng tiền:</strong> @Model.TotalAmount.ToString("N0") VND</p>
+    <p><strong>Trạng thái:</strong> @Model.Status</p>
+
+    <h5>Chi Tiết Sản Phẩm:</h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Hình ảnh</th>
+                <th>Tên sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Giá</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderDetails)
+            {
+                <tr>
+                    <td><img src="@Url.Content(item.Product.ImageURL)" alt="@item.Product.ProductName" class="cart-product-image" /></td>
+                    <td>@item.Product.ProductName</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Price.ToString("N0") VND</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

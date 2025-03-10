@@ -1,22 +1,135 @@
 ﻿<link rel="stylesheet" href="~/Content/css/header.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <header>
     <nav class="navbar navbar-expand-lg bg-white shadow-sm">
         <div class="container">
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <a class="navbar-brand" href="#">ShopQuanAo</a>
+                    <a class="navbar-brand" href="#">24hClothesShop</a>
                     <li class="nav-item"><a class="nav-link" href="@Url.Action("Home", "Home")">Trang chủ</a></li>
                     <li class="nav-item"><a class="nav-link" href="@Url.Action("DanhMuc", "DanhMuc")">Danh mục</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Liên hệ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Contact", "Contact")">Liên hệ</a></li>
                 </ul>
 
                 <!-- Custom Search Bar -->
                 <div class="search-container">
-                    <input type="text" class="search-input" placeholder="Tìm kiếm">
-                    <button class="search-btn">Tìm</button>
+                    <input type="text" id="search-input" name="keyword" class="search-input" placeholder="Tìm kiếm sản phẩm..." required autocomplete="off" />
+                    <button type="submit" class="search-btn">Tìm</button>
+                    <ul id="suggestions-list" class="suggestions-dropdown"></ul>
                 </div>
 
-                
+
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script>
+                    $(document).ready(function () {
+                        $("#search-input").on("input", function () {
+                            var keyword = $(this).val();
+                            if (keyword.length >= 2) { // Chỉ tìm kiếm khi nhập từ 2 ký tự trở lên
+                                $.ajax({
+                                    url: "/Search/GetSuggestions",
+                                    type: "GET",
+                                    data: { keyword: keyword },
+                                    success: function (data) {
+                                        var dropdown = $("#suggestions-list");
+                                        dropdown.empty().show();
+
+                                        if (data.length > 0) {
+                                            $.each(data, function (i, product) {
+                                                dropdown.append(`<li onclick="selectProduct('${product.ProductID}')">
+                                                                                    <img src="${product.ImageURL}" alt="${product.ProductName}" />
+                                                                                    ${product.ProductName}
+                                                                                </li>`);
+                                            });
+                                        } else {
+                                            dropdown.append("<li>Không tìm thấy sản phẩm</li>");
+                                        }
+                                    }
+                                });
+                            } else {
+                                $("#suggestions-list").hide();
+                            }
+                        });
+
+                        $(document).on("click", function (e) {
+                            if (!$(e.target).closest(".search-container").length) {
+                                $("#suggestions-list").hide();
+                            }
+                        });
+
+                        // Khi bấm nút "Tìm", chuyển hướng sang trang search
+                        $(".search-btn").on("click", function () {
+                            var keyword = $("#search-input").val().trim();
+                            if (keyword) {
+                                window.location.href = "/Search/Search?keyword=" + encodeURIComponent(keyword);
+                            }
+                        });
+
+                        // Khi bấm Enter trong ô tìm kiếm, cũng chuyển hướng
+                        $("#search-input").on("keypress", function (e) {
+                            if (e.which === 13) { // 13 là mã phím Enter
+                                $(".search-btn").click();
+                            }
+                        });
+                    });
+
+                    function selectProduct(id) {
+                        window.location.href = "/Detail/Detail?id=" + id;
+                    }
+                </script>
+
+
+                <!-- Giỏ hàng -->
+                <div class="cart-container">
+                    <a href="@Url.Action("Cart", "Cart")" class="cart-link">
+                        <img src="~/Content/images/cart2.png" alt="Giỏ hàng" class="cart-icon" />
+                        <span id="cart-count" class="cart-count">
+                            @(Session["CartCount"] != null ? Session["CartCount"] : 0)
+                        </span>
+                    </a>
+                </div>
+
+                <script>
+                    function updateCartCount(count) {
+                        if (count > 0) {
+                            $("#cart-count").text(count).show();
+                        } else {
+                            $("#cart-count").hide();
+                        }
+                    }
+
+                    $(document).on("click", ".add-to-cart", function (e) {
+                        e.preventDefault();
+                        var productId = $(this).data("id");
+                        var quantity = 1;
+
+                        $.post("/Cart/AddToCart", { productId: productId, quantity: quantity }, function (response) {
+                            if (response.success) {
+                                updateCartCount(response.cartCount);
+                                alert(response.message);
+                            } else {
+                                alert(response.message);
+                            }
+                        });
+                    });
+
+                    $(document).on("click", ".remove-from-cart", function (e) {
+                        e.preventDefault();
+                        var cartId = $(this).data("id");
+
+                        $.post("/Cart/RemoveFromCart", { cartId: cartId }, function (response) {
+                            if (response.success) {
+                                updateCartCount(response.cartCount);
+                                alert(response.message);
+                                location.reload();
+                            } else {
+                                alert(response.message);
+                            }
+                        });
+                    });
+
+                </script>
+
                 <nav class="reg">
                     <ul>
                         @if (Session["Email"] != null)

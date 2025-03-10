@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width" />
     <title>Detail</title>
     <link rel="stylesheet" href="~/Content/css/detail.css" />
+    <script src="~/Content/js/comment.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 
 @Html.Partial("_Header")
@@ -25,9 +28,24 @@
 
             <!-- Nhóm chọn số lượng và thêm vào giỏ hàng -->
             <div class="action-group">
-                <input type="number" id="quantity" class="quantity-input" value="1" min="1" max="@ViewBag.Stock">
-                <button class="btnAdd" onclick="addToCart()">Thêm vào giỏ hàng</button>
+                @{
+                    if (ViewBag.Stock > 0)
+                    {
+                        <input type="number" id="quantity" class="quantity-input" value="1" min="1" max="@ViewBag.Stock">
+                        <button class="btnAdd" onclick="addToCart()">Thêm vào giỏ hàng</button>
+
+                        if (ViewBag.Stock <= 10)
+                        {
+                            <p class="low-stock-warning" style="color: red;">⚠️ Chỉ còn @ViewBag.Stock sản phẩm!</p>
+                        }
+                    }
+                    else
+                    {
+                        <p class="out-of-stock" style="color: red; font-weight: bold;">Sản phẩm đã hết hàng!</p>
+                    }
+                }
             </div>
+
         </div>
     </div>
 
@@ -40,10 +58,8 @@
     <div class="comment-section">
         <h3>Bình luận</h3>
 
-        <!-- Kiểm tra xem người dùng đã đăng nhập hay chưa -->
         @if (Session["Email"] != null)
         {
-            <!-- Form nhập bình luận -->
             <div class="comment-form">
                 <textarea id="commentText" placeholder="Viết bình luận..."></textarea>
                 <button onclick="submitComment()">Gửi bình luận</button>
@@ -54,7 +70,6 @@
             <p class="login-required">Bạn cần <a href="@Url.Action("Login", "Login")">đăng nhập</a> mới có thể bình luận.</p>
         }
 
-        <!-- Danh sách bình luận -->
         <div id="comments">
             @if (ViewBag.Comments == null || !((List<WebMusic.Models.Comment>)ViewBag.Comments).Any())
             {
@@ -67,6 +82,29 @@
                     <div class="comment">
                         <p><strong>@comment.Customer.FullName:</strong> @comment.CommentText</p>
                         <small>@comment.CreatedAt?.ToString("dd/MM/yyyy HH:mm")</small>
+
+                        @if (Session["Email"] != null)
+                        {
+                            <button class="reply-btn" onclick="showReplyForm(@comment.CommentID)">Trả lời</button>
+
+                            <div id="replyForm-@comment.CommentID" class="reply-form" style="display: none;">
+                                <textarea id="replyText-@comment.CommentID" placeholder="Viết trả lời..."></textarea>
+                                <button onclick="submitReply(@comment.CommentID)">Gửi</button>
+                            </div>
+                        }
+
+                        @if (comment.Comments1 != null && comment.Comments1.Any())
+                        {
+                            <div class="replies">
+                                @foreach (var reply in comment.Comments1)
+                                {
+                                    <div class="reply">
+                                        <p><strong>@reply.Customer.FullName:</strong> @reply.CommentText</p>
+                                        <small>@reply.CreatedAt?.ToString("dd/MM/yyyy HH:mm")</small>
+                                    </div>
+                                }
+                            </div>
+                        }
                     </div>
                 }
             }
@@ -74,52 +112,47 @@
     </div>
 
     <script>
-    function submitComment() {
-    var commentText = document.getElementById("commentText").value.trim();
-    var productId = @ViewBag.ProductID;
-
-    if (commentText === "") {
-        alert("Vui lòng nhập nội dung bình luận.");
-        return;
+    function showReplyForm(commentId) {
+        let replyForm = document.getElementById("replyForm-" + commentId);
+        if (replyForm.style.display === "none") {
+            replyForm.style.display = "block";
+        } else {
+            replyForm.style.display = "none";
+        }
     }
 
-    fetch('@Url.Action("AddComment", "Detail")', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: JSON.stringify({
-            productId: productId,
-            commentText: commentText
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            var commentSection = document.getElementById("comments");
-            var newComment = document.createElement("div");
-            newComment.classList.add("comment");
+    function submitReply(parentCommentId) {
+        let replyText = document.getElementById("replyText-" + parentCommentId).value;
+        let productId = "@ViewBag.ProductID"; // Chuyển thành chuỗi hợp lệ
 
-            // Nếu dữ liệu từ server bị sai, định dạng lại
-            let createdAtFormatted = data.createdAt || new Date().toLocaleString('vi-VN', { hour12: false });
-
-            newComment.innerHTML = `
-                <p><strong>${data.customerName}:</strong> ${commentText}</p>
-                <small>${createdAtFormatted}</small>
-            `;
-            commentSection.prepend(newComment);
-
-            document.getElementById("commentText").value = "";
-
-            var noCommentsMsg = document.getElementById("no-comments");
-            if (noCommentsMsg) noCommentsMsg.style.display = "none";
-        } else {
-            alert(data.message);
+        if (replyText.trim() === "") {
+            alert("Nội dung không được để trống.");
+            return;
         }
-    })
-    .catch(error => console.error('Lỗi:', error));
-}
+
+        $.ajax({
+            type: "POST",
+            url: "/Detail/ReplyComment",
+            data: { productId: productId, commentText: replyText, parentCommentId: parentCommentId },
+            success: function (response) {
+                if (response.success) {
+                    location.reload();
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function () {
+                alert("Có lỗi xảy ra khi gửi bình luận.");
+            }
+        });
+    }
+    </script>
+
+    <script>
+    var commentUrl = '@Url.Action("AddComment", "Detail")';
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("commentText").setAttribute("data-product-id", @ViewBag.ProductID);
+    });
 
     </script>
 
@@ -129,8 +162,38 @@
 @Html.Partial("_Footer")
 
 <script>
-    function addToCart() {
-        let quantity = document.getElementById('quantity').value;
-        alert("Đã thêm " + quantity + " sản phẩm vào giỏ hàng!");
+function addToCart() {
+    let productId = "@ViewBag.ProductID";
+    let quantity = document.getElementById("quantity").value;
+    let stock = parseInt("@ViewBag.Stock");
+
+    if (stock === 0) {
+        alert("Sản phẩm đã hết hàng!");
+        return;
     }
+
+    if (quantity > stock) {
+        alert("Số lượng đặt hàng vượt quá số lượng tồn kho!");
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "/Cart/AddToCart",
+        data: { productId: productId, quantity: quantity },
+        success: function (response) {
+            if (!response.success) {
+                alert(response.message);
+                if (response.message.includes("đăng nhập")) {
+                    window.location.href = "/Login/Login";
+                }
+            } else {
+                alert(response.message);
+            }
+        },
+        error: function () {
+            alert("Có lỗi xảy ra khi thêm sản phẩm.");
+        }
+    });
+}
 </script>

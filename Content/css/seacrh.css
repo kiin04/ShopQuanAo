@@ -1,0 +1,98 @@
+﻿/* General Styles */
+body {
+    font-family: "Poppins", sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    background: #f8f9fa;
+}
+
+/* Product List Grid */
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    margin: 30px auto;
+    padding: 0 20px;
+    max-width: 1200px;
+}
+
+/* Product Item */
+.product-item {
+    border: none;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    background: #fff;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .product-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    }
+
+/* Product Image */
+.product-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+/* Title & Description */
+h3 {
+    font-size: 20px;
+    margin: 10px 0;
+    color: #222;
+    font-weight: 600;
+}
+
+p {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+}
+
+/* Button */
+.btn-choose {
+    display: inline-block;
+    padding: 12px 18px;
+    color: #fff;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.2s;
+    box-shadow: 0 3px 8px rgba(0, 123, 255, 0.3);
+}
+
+    .btn-choose:hover {
+        background: linear-gradient(135deg, #0056b3, #003d80);
+        transform: scale(1.05);
+    }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .product-list {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .product-item {
+        padding: 15px;
+    }
+
+    h3 {
+        font-size: 18px;
+    }
+
+    p {
+        font-size: 13px;
+    }
+
+    .btn-choose {
+        padding: 10px 15px;
+    }
+}

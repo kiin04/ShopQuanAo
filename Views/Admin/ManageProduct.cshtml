@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
 <head>
@@ -7,12 +6,11 @@
     <title>ManageProduct</title>
     <link rel="stylesheet" href="~/Content/css/manageproduct.css" />
     <script src="~/Content/js/successmessage.js"></script>
-
 </head>
+
 @Html.Partial("_HeaderAdmin")
-
 <div class="main-content">
-
+    <p>Danh sách sản phẩm</p>
     @if (Model.Count > 0)
     {
         <table class="table table-bordered">
@@ -46,7 +44,10 @@
                         <td>@product.Stock</td>
                         <td>@product.Description</td>
                         <td>
-                            <img src="@Url.Content(product.ImageURL)" width="50" height="50" onerror="this.onerror=null;this.src='/Content/images/no-image.png';" />
+                            @{
+                                var imageUrl = !string.IsNullOrEmpty(product.ImageURL) ? Url.Content(product.ImageURL) : "/Content/images/no-image.png";
+                            }
+                            <img src="@imageUrl" width="50" height="50" onerror="this.onerror=null;this.src='/Content/images/no-image.png';" />
                         </td>
                         <td>
                             <a href="@Url.Action("EditProduct", "Admin", new { id = product.ProductID })" class="btn btn-warning">Sửa</a>

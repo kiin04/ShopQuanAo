@@ -8,6 +8,7 @@ using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
 using WebMusic.Models;
+using WebMusic.Models.TemplateMethod;
 
 namespace WebMusic.Controllers
 {
@@ -17,12 +18,64 @@ namespace WebMusic.Controllers
         // GET: Admin
         public ActionResult Dashboard()
         {
+            // Thống kê tổng số đơn hàng
+            int totalOrders = db.Orders.Count();
+
+            // Thống kê tổng doanh thu
+            decimal totalRevenue = db.Orders
+                .Where(o => o.Status == "Đã giao")
+                .Sum(o => (decimal?)o.TotalAmount) ?? 0;
+
+            // Đơn hàng theo trạng thái
+            var ordersByStatus = db.Orders
+                .GroupBy(o => o.Status)
+                .Select(g => new OrderStatusViewModel
+                {
+                    Status = g.Key,
+                    Count = g.Count()
+                }).ToList();
+
+            // Lấy năm hiện tại
+            int currentYear = DateTime.Now.Year;
+
+            // Doanh thu theo tháng (đảm bảo đủ 12 tháng)
+            var revenueData = db.Orders
+                .Where(o => o.OrderDate.HasValue)
+                .GroupBy(o => new { o.OrderDate.Value.Year, o.OrderDate.Value.Month })
+                .Select(g => new
+                {
+                    Year = g.Key.Year,
+                    Month = g.Key.Month,
+                    Revenue = g.Sum(o => (decimal?)o.TotalAmount) ?? 0
+                })
+                .ToList();
+
+            // Tạo danh sách đủ 12 tháng với giá trị mặc định là 0
+            var fullRevenueByMonth = Enumerable.Range(1, 12)
+                .Select(m => new RevenueByMonthViewModel
+                {
+                    Year = currentYear,
+                    Month = m,
+                    Revenue = revenueData.FirstOrDefault(r => r.Year == currentYear && r.Month == m)?.Revenue ?? 0
+                })
+                .ToList();
+
+            // Truyền dữ liệu đến View
+            ViewBag.TotalOrders = totalOrders;
+            ViewBag.TotalRevenue = totalRevenue;
+            ViewBag.OrdersByStatus = ordersByStatus;
+            ViewBag.RevenueByMonth = fullRevenueByMonth;
+
             return View();
         }
 
+        // ViewModel để tránh lỗi kiểu dữ liệu
+
+
         public ActionResult ManageProduct()
         {
-            var products = db.Products.ToList();
+            var repo = new ProductRepository();
+            var products = repo.GetAllProducts();
             return View(products);
         }
 
@@ -37,127 +90,80 @@ namespace WebMusic.Controllers
         {
             if (ModelState.IsValid)
             {
-                var existingProduct = db.Products.FirstOrDefault(p => p.ProductName == product.ProductName);
-                if (existingProduct != null)
+                if (imageFile != null && imageFile.ContentLength > 0)
                 {
-                    ViewBag.Error = "Tên sản phẩm đã tồn tại";
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                    string path = Path.Combine(Server.MapPath("~/Content/products/"), fileName);
+                    imageFile.SaveAs(path);
+                    product.ImageURL = "/Content/products/" + fileName;
+                }
+
+                product.CreatedAt = DateTime.Now;
+                var repo = new ProductRepository();
+                if (repo.AddProduct(product))
+                {
+                    return RedirectToAction("ManageProduct");
                 }
                 else
                 {
-                    // Kiểm tra nếu file không null và là ảnh
-                    if (imageFile != null && imageFile.ContentLength > 0)
-                    {
-                        string fileName = Guid.NewGuid().ToString() + System.IO.Path.GetExtension(imageFile.FileName);
-                        string path = System.IO.Path.Combine(Server.MapPath("/Content/products/"), fileName);
-                        imageFile.SaveAs(path);
-
-                        var newProduct = new Product
-                        {
-                            ProductName = product.ProductName,
-                            CategoryID = product.CategoryID,
-                            Price = product.Price,
-                            Stock = product.Stock,
-                            Description = product.Description,
-                            ImageURL = "/Content/products/" + fileName,
-                            CreatedAt = DateTime.Now
-                        };
-                        db.Products.Add(newProduct);
-                        db.SaveChanges();
-                        return RedirectToAction("ManageProduct");
-                    }
-                    else
-                    {
-                        // Nếu không có ảnh hoặc không hợp lệ, hiển thị thông báo lỗi
-                        ViewBag.Error = "Vui lòng chọn một file ảnh hợp lệ.";
-                    }
+                    ViewBag.Error = "Tên sản phẩm đã tồn tại";
                 }
             }
 
-            // Truyền lại danh sách thể loại nếu có lỗi
-            ViewBag.categories = new SelectList(db.Categories.ToList(), "CategoryID", "CategoryName");
+            ViewBag.Categories = new SelectList(DatabaseContextSingleton.Instance.Categories, "CategoryID", "CategoryName");
             return View();
         }
 
         public ActionResult EditProduct(int id)
         {
-            var product = db.Products.Find(id);
+            var repo = new ProductRepository();
+            var product = repo.GetProductById(id);
             if (product == null)
             {
                 return HttpNotFound();
             }
 
-            // Lấy danh sách danh mục để hiển thị trong dropdown
             ViewBag.Categories = new SelectList(db.Categories, "CategoryID", "CategoryName", product.CategoryID);
             return View(product);
         }
 
-        // POST: Edit Product
         [HttpPost]
         public ActionResult EditProduct(Product model, HttpPostedFileBase ImageUpload)
         {
             if (ModelState.IsValid)
             {
-                var existingProduct = db.Products.Find(model.ProductID);
-                if (existingProduct != null)
+                if (ImageUpload != null && ImageUpload.ContentLength > 0)
                 {
-                    existingProduct.ProductName = model.ProductName;
-                    existingProduct.CategoryID = model.CategoryID;
-                    existingProduct.Price = model.Price;
-                    existingProduct.Stock = model.Stock;
-                    existingProduct.Description = model.Description;
+                    string fileName = Path.GetFileName(ImageUpload.FileName);
+                    string path = Path.Combine(Server.MapPath("~/Content/products/"), fileName);
+                    ImageUpload.SaveAs(path);
+                    model.ImageURL = "/Content/products/" + fileName;
+                }
 
-                    // Xử lý upload ảnh mới nếu có
-                    if (ImageUpload != null && ImageUpload.ContentLength > 0)
-                    {
-                        try
-                        {
-                            string fileName = Path.GetFileName(ImageUpload.FileName);
-                            string path = Path.Combine(Server.MapPath("~/Content/products/"), fileName);
-
-                            // Kiểm tra nếu file đã tồn tại -> đổi tên tránh ghi đè
-                            if (System.IO.File.Exists(path))
-                            {
-                                string fileExt = Path.GetExtension(fileName);
-                                string fileWithoutExt = Path.GetFileNameWithoutExtension(fileName);
-                                fileName = $"{fileWithoutExt}_{DateTime.Now.Ticks}{fileExt}";
-                                path = Path.Combine(Server.MapPath("~/Content/products/"), fileName);
-                            }
-
-                            // Lưu file lên server
-                            ImageUpload.SaveAs(path);
-
-                            // Cập nhật URL hình ảnh trong database
-                            existingProduct.ImageURL = "~/Content/products/" + fileName;
-                        }
-                        catch (Exception ex)
-                        {
-                            ModelState.AddModelError("", "Lỗi khi tải ảnh lên: " + ex.Message);
-                        }
-                    }
-
-                    db.SaveChanges();
-                    TempData["SuccessMessage"] = "Sản phẩm đã được cập nhật thành công!";
+                var repo = new ProductRepository();
+                if (repo.UpdateProduct(model))
+                {
+                    TempData["SuccessMessage"] = "Sản phẩm đã được cập nhật!";
                     return RedirectToAction("ManageProduct");
                 }
             }
 
-            // Nếu có lỗi, hiển thị lại form với danh mục
-            ViewBag.Categories = new SelectList(db.Categories, "CategoryID", "CategoryName", model.CategoryID);
+            ViewBag.Categories = new SelectList(DatabaseContextSingleton.Instance.Categories, "CategoryID", "CategoryName", model.CategoryID);
             return View(model);
         }
+
         [HttpPost]
         public ActionResult DeleteProduct(int id)
         {
-            var product = db.Products.Find(id);
-            if (product == null)
+            var repo = new ProductRepository();
+            if (repo.DeleteProduct(id))
             {
-                return HttpNotFound();
+                TempData["SuccessMessage"] = "Sản phẩm đã được xóa!";
             }
-
-            db.Products.Remove(product);
-            db.SaveChanges();
-
-            TempData["SuccessMessage"] = "Sản phẩm đã được xóa thành công!";
+            else
+            {
+                TempData["ErrorMessage"] = "Không tìm thấy sản phẩm!";
+            }
             return RedirectToAction("ManageProduct");
         }
 
@@ -166,7 +172,7 @@ namespace WebMusic.Controllers
 
         public ActionResult ManageCategory()
         {
-            var categories = db.Categories.ToList();
+            var categories = DatabaseContextSingleton.Instance.Categories.ToList();
             return View(categories);
         }
 
@@ -180,15 +186,12 @@ namespace WebMusic.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Kiểm tra tên thể loại đã tồn tại hay chưa
+                var db = DatabaseContextSingleton.Instance;
+
                 var check = db.Categories.FirstOrDefault(c => c.CategoryName == category.CategoryName);
                 if (check == null)
                 {
-                    var newCategory = new Category
-                    {
-                        CategoryName = category.CategoryName
-                    };
-
+                    var newCategory = new Category { CategoryName = category.CategoryName };
                     db.Categories.Add(newCategory);
                     db.SaveChanges();
 
@@ -196,92 +199,69 @@ namespace WebMusic.Controllers
                 }
                 else
                 {
-                    // Nếu thể loại đã tồn tại, hiển thị thông báo lỗi
                     ViewBag.Error = "Thể loại đã tồn tại.";
                 }
             }
             return View(category);
         }
+
         public ActionResult EditCategory(int id)
-            {
-                using (var db = new ShopQuanAoEntities())
-                {
-                    var category = db.Categories.Find(id);
-                    if (category == null)
-                    {
-                        return HttpNotFound();
-                    }
-                    return View(category);
-                }
-            }
-
-         [HttpPost]
-        public ActionResult EditCategory(Category model)
-            {
-                if (ModelState.IsValid)
-                {
-                    using (var db = new ShopQuanAoEntities())
-                    {
-                        var category = db.Categories.Find(model.CategoryID);
-                        if (category != null)
-                        {
-                            category.CategoryName = model.CategoryName;
-                            db.SaveChanges();
-                            return RedirectToAction("ManageCategory"); // Chuyển hướng sau khi sửa
-                        }
-                    }
-                }
-                return View(model);
-            }
-
-            [HttpPost]
-            public ActionResult DeleteCategory(int id)
-            {
-                var category = db.Categories.Find(id);
-                if (category == null)
-                {
-                    return HttpNotFound();
-                }
-
-                db.Categories.Remove(category);
-                db.SaveChanges();
-
-                TempData["SuccessMessage"] = "Danh mục đã được xóa thành công!";
-                return RedirectToAction("ManageCategory");
-            }
-
-
-
-        public ActionResult ManagerUser()
         {
-            var customers = db.Customers.Select(c => new UserViewModel
+            var category = DatabaseContextSingleton.Instance.Categories.Find(id);
+            if (category == null)
             {
-                ID = c.CustomerID,
-                FullName = c.FullName,
-                Email = c.Email,
-                Phone = c.Phone,
-                Address = c.Address,
-                Role = "Customer",
-                Avatar = c.Avatar
-            }).ToList();
+                return HttpNotFound();
+            }
+            return View(category);
+        }
 
-            var admins = db.Users.Select(u => new UserViewModel
+        [HttpPost]
+        public ActionResult EditCategory(Category model)
+        {
+            if (ModelState.IsValid)
             {
-                ID = u.UserID,
-                FullName = u.Username,
-                Email = u.Email,
-                Phone = "-",
-                Address = "-",
-                Role = "Admin",
-                Avatar = "/Content/images/7.jpg"
-            }).ToList();
+                var db = DatabaseContextSingleton.Instance;
+                var category = db.Categories.Find(model.CategoryID);
+                if (category != null)
+                {
+                    category.CategoryName = model.CategoryName;
+                    db.SaveChanges();
+                    return RedirectToAction("ManageCategory");
+                }
+            }
+            return View(model);
+        }
 
-            // Gộp danh sách
-            var allUsers = customers.Concat(admins).ToList();
-            return View(allUsers);
+        [HttpPost]
+        public ActionResult DeleteCategory(int id)
+        {
+            var db = DatabaseContextSingleton.Instance;
+            var category = db.Categories.Find(id);
+            if (category == null)
+            {
+                return HttpNotFound();
+            }
+
+            db.Categories.Remove(category);
+            db.SaveChanges();
+
+            TempData["SuccessMessage"] = "Danh mục đã được xóa thành công!";
+            return RedirectToAction("ManageCategory");
         }
 
 
+
+
+
+        private readonly CustomerRepository _customerRepo = new CustomerRepository();
+        private readonly AdminRepository _adminRepo = new AdminRepository();
+        public ActionResult ManagerUser()
+        {
+            var customers = _customerRepo.GetAllUsers();
+            var admins = _adminRepo.GetAllUsers();
+            var allUsers = customers.Concat(admins).ToList();
+            return View(allUsers);
+        }
 
         public ActionResult AddCustomer()
         {
@@ -293,46 +273,28 @@ namespace WebMusic.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Kiểm tra email đã tồn tại chưa
-                var check = db.Customers.FirstOrDefault(c => c.Email.Trim() == customer.Email.Trim());
-                if (check == null)
+                string avatarPath = "/Content/images/7.jpg";
+
+                if (avatarFile != null && avatarFile.ContentLength > 0)
                 {
-                    string avatarPath = "/Content/images/7.jpg"; // Ảnh mặc định
-
-                    // Kiểm tra nếu có tệp ảnh tải lên
-                    if (avatarFile != null && avatarFile.ContentLength > 0)
+                    string uploadDir = Server.MapPath("~/Content/avatars/");
+                    if (!Directory.Exists(uploadDir))
                     {
-                        // Đảm bảo thư mục lưu trữ tồn tại
-                        string uploadDir = Server.MapPath("~/Content/avatars/");
-                        if (!Directory.Exists(uploadDir))
-                        {
-                            Directory.CreateDirectory(uploadDir);
-                        }
-
-                        // Lưu tệp ảnh với tên duy nhất
-                        string fileExtension = Path.GetExtension(avatarFile.FileName);
-                        string fileName = Guid.NewGuid().ToString() + fileExtension;
-                        string filePath = Path.Combine(uploadDir, fileName);
-                        avatarFile.SaveAs(filePath);
-
-                        // Lưu đường dẫn vào database (dùng đường dẫn ảo)
-                        avatarPath = "/Content/avatars/" + fileName;
+                        Directory.CreateDirectory(uploadDir);
                     }
 
-                    var newCus = new Customer
-                    {
-                        FullName = customer.FullName.Trim(),
-                        Email = customer.Email.Trim(),
-                        Phone = customer.Phone.Trim(),
-                        Address = customer.Address.Trim(),
-                        PasswordHash = customer.PasswordHash, // Băm mật khẩu
-                        Avatar = avatarPath,
-                        CreatedAt = DateTime.Now
-                    };
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(avatarFile.FileName);
+                    string filePath = Path.Combine(uploadDir, fileName);
+                    avatarFile.SaveAs(filePath);
 
-                    db.Customers.Add(newCus);
-                    db.SaveChanges();
+                    avatarPath = "/Content/avatars/" + fileName;
+                }
 
+                customer.Avatar = avatarPath;
+                customer.CreatedAt = DateTime.Now;
+
+                if (_customerRepo.Add(customer))
+                {
                     return RedirectToAction("ManagerUser");
                 }
                 else
@@ -345,35 +307,19 @@ namespace WebMusic.Controllers
 
         public ActionResult EditCustomer(int id)
         {
-            var customer = db.Customers.Find(id);
+            var customer = _customerRepo.GetById(id);
             if (customer == null)
             {
                 return HttpNotFound();
             }
-
             return View(customer);
         }
 
         [HttpPost]
         public ActionResult EditCustomer(int id, Customer customer, HttpPostedFileBase avatarFile)
         {
-            var existingCustomer = db.Customers.Find(id);
-            if (existingCustomer == null)
-            {
-                return HttpNotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                // Kiểm tra email không bị trùng với khách hàng khác
-                var checkEmail = db.Customers.FirstOrDefault(c => c.Email.Trim() == customer.Email.Trim() && c.CustomerID != id);
-                if (checkEmail != null)
-                {
-                    ViewBag.Error = "Email đã được sử dụng bởi khách hàng khác.";
-                    return View(customer);
-                }
-
-                // Xử lý ảnh đại diện nếu có file mới
                 if (avatarFile != null && avatarFile.ContentLength > 0)
                 {
                     string uploadDir = Server.MapPath("~/Content/avatars/");
@@ -382,22 +328,21 @@ namespace WebMusic.Controllers
                         Directory.CreateDirectory(uploadDir);
                     }
 
-                    string fileExtension = Path.GetExtension(avatarFile.FileName);
-                    string fileName = Guid.NewGuid().ToString() + fileExtension;
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(avatarFile.FileName);
                     string filePath = Path.Combine(uploadDir, fileName);
                     avatarFile.SaveAs(filePath);
 
-                    existingCustomer.Avatar = "/Content/avatars/" + fileName;
+                    customer.Avatar = "/Content/avatars/" + fileName;
                 }
 
-                // Cập nhật thông tin khách hàng
-                existingCustomer.FullName = customer.FullName.Trim();
-                existingCustomer.Email = customer.Email.Trim();
-                existingCustomer.Phone = customer.Phone.Trim();
-                existingCustomer.Address = customer.Address.Trim();
-
-                db.SaveChanges();
-                return RedirectToAction("ManagerUser");
+                if (_customerRepo.Update(id, customer))
+                {
+                    return RedirectToAction("ManagerUser");
+                }
+                else
+                {
+                    ViewBag.Error = "Email đã được sử dụng bởi khách hàng khác.";
+                }
             }
 
             return View(customer);
@@ -406,36 +351,109 @@ namespace WebMusic.Controllers
         [HttpPost]
         public ActionResult DeleteCustomer(int id)
         {
-            var user = db.Users.FirstOrDefault(u => u.UserID == id);
-            var customer = db.Customers.FirstOrDefault(c => c.CustomerID == id);
-
-            // Kiểm tra nếu người dùng là Admin
-            if (user != null && user.Role == "Admin")
+            if (_customerRepo.Delete(id))
             {
-                int adminCount = db.Users.Count(u => u.Role == "Admin");
-
-                // Nếu chỉ còn 1 Admin duy nhất, không cho phép xóa
-                if (adminCount <= 1)
-                {
-                    TempData["ErrorMessage"] = "Không thể xóa! Cần ít nhất một Admin.";
-                    return RedirectToAction("ManagerUser");
-                }
-
-                db.Users.Remove(user);
-            }
-            else if (customer != null) // Nếu là khách hàng thì có thể xóa
-            {
-                db.Customers.Remove(customer);
+                TempData["SuccessMessage"] = "Người dùng đã được xóa thành công!";
             }
             else
             {
-                return HttpNotFound();
+                TempData["ErrorMessage"] = "Không thể xóa! Cần ít nhất một Admin.";
             }
-
-            db.SaveChanges();
-            TempData["SuccessMessage"] = "Người dùng đã được xóa thành công!";
             return RedirectToAction("ManagerUser");
         }
 
+
+
+
+
+        public ActionResult ManagerOrder()
+        {
+            var orders = db.Orders
+                           .OrderByDescending(o => o.OrderDate)
+                           .Include("OrderDetails.Product") // Load chi tiết đơn hàng
+                           .ToList();
+            return View(orders);
+        }
+
+        public ActionResult OrderDetails(int id)
+        {
+            var order = db.Orders
+                          .Include("OrderDetails.Product") // Load luôn thông tin sản phẩm
+                          .FirstOrDefault(o => o.OrderID == id);
+
+            if (order == null)
+            {
+                return HttpNotFound(); // Trả về lỗi 404 nếu không tìm thấy
+            }
+
+            return PartialView("OrderDetails", order); // Trả về PartialView chứa thông tin đơn hàng
+        }
+
+
+        [HttpPost]
+        public JsonResult ConfirmOrder(int id)
+        {
+            try
+            {
+                var order = db.Orders.Find(id);
+                if (order != null)
+                {
+                    // Kiểm tra nếu đơn hàng đã bị hủy hoặc đã giao thì không cho thay đổi
+                    if (order.Status == "Đã hủy" || order.Status == "Đã giao")
+                    {
+                        return Json(new { success = false, message = "Không thể xác nhận đơn hàng đã bị hủy hoặc đã giao." });
+                    }
+
+                    order.Status = "Đã giao";
+                    db.SaveChanges();
+                    return Json(new { success = true });
+                }
+                return Json(new { success = false, message = "Không tìm thấy đơn hàng." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.InnerException?.Message ?? ex.Message });
+            }
+        }
+
+
+        [HttpPost]
+        public JsonResult CancelOrder(int id)
+        {
+            try
+            {
+                var order = db.Orders.Find(id);
+                if (order != null)
+                {
+                    // Kiểm tra nếu đơn hàng đã bị hủy hoặc đã giao thì không cho thay đổi
+                    if (order.Status == "Đã hủy" || order.Status == "Đã giao")
+                    {
+                        return Json(new { success = false, message = "Không thể hủy đơn hàng đã bị hủy hoặc đã giao." });
+                    }
+
+                    order.Status = "Đã hủy";
+
+                    // Lấy danh sách sản phẩm trong đơn hàng
+                    var orderDetails = db.OrderDetails.Where(od => od.OrderID == id).ToList();
+
+                    foreach (var item in orderDetails)
+                    {
+                        var product = db.Products.Find(item.ProductID);
+                        if (product != null)
+                        {
+                            product.Stock += item.Quantity; // Hoàn trả số lượng sản phẩm
+                        }
+                    }
+
+                    db.SaveChanges();
+                    return Json(new { success = true });
+                }
+                return Json(new { success = false, message = "Không tìm thấy đơn hàng." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.InnerException?.Message ?? ex.Message });
+            }
+        }
     }
 }

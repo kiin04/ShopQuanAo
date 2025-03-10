@@ -1,0 +1,94 @@
+﻿@{
+    Layout = null;
+}
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ManagerOrder</title>
+    <link rel="stylesheet" href="~/Content/css/manageproduct.css" />
+</head>
+@Html.Partial("_HeaderAdmin")
+
+<div class="main-content">
+    <h2>Danh sách đơn hàng</h2>
+
+    @if (Model.Count == 0)
+    {
+        <p class="text-center">Không có đơn hàng nào!</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Mã đơn</th>
+                    <th>Khách hàng</th>
+                    <th>Ngày đặt</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Chi tiết</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td>@order.OrderID</td>
+                        <td>@(order.Customer != null ? order.Customer.FullName : "Khách vãng lai")</td>
+                        <td>@(order.OrderDate?.ToString("dd/MM/yyyy HH:mm") ?? "Không xác định")</td>
+                        <td>@order.TotalAmount.ToString("N0") VNĐ</td>
+                        <td class="order-status" data-id="@order.OrderID">@order.Status</td>
+                        <td>
+                            <button class="btn btn-info btn-view-details" data-id="@order.OrderID">Xem</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<!-- Modal hiển thị chi tiết đơn hàng -->
+<div id="orderDetailsModal" class="modal fade" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Chi tiết đơn hàng</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="orderDetailsContent">
+                    <!-- Nội dung chi tiết đơn hàng sẽ được tải vào đây -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".btn-view-details").click(function () {
+            var orderId = $(this).data("id");
+
+            // Gửi Ajax request để lấy chi tiết đơn hàng
+            $.ajax({
+                url: '@Url.Action("OrderDetails", "Admin")',
+                type: 'GET',
+                data: { id: orderId },
+                success: function (response) {
+                    $("#orderDetailsContent").html(response); // Load nội dung vào modal
+                    $("#orderDetailsModal").css("display", "block").addClass("show"); // Hiển thị modal                
+                },
+                error: function () {
+                    alert("Lỗi khi tải dữ liệu!");
+                }
+            });
+        });
+        // Đóng modal khi nhấn nút đóng
+        $(".close").click(function () {
+            $("#orderDetailsModal").css("display", "none").removeClass("show");
+        });
+    });
+</script>

@@ -78,11 +78,12 @@
     display: flex;
     align-items: center;
     margin-right: 15px; /* Space between the search and login button */
-    margin-left: 20px
+    margin-left: 20px;
+    position: relative;
 }
 
 .search-input {
-    width: 500px; /* Set a fixed width for the search bar */
+    width: 450px; /* Set a fixed width for the search bar */
     padding: 8px;
     font-size: 14px;
     border: 1px solid #ccc;
@@ -102,6 +103,44 @@
     .search-btn:hover {
         background-color: #0056b3;
     }
+.suggestions-dropdown {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.95); /* Màu nền trắng có độ trong suốt */
+    border: 1px solid #ccc; /* Đổi viền sang xám nhạt */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 465px; /* Cùng độ rộng với ô tìm kiếm */
+    max-height: 200px; /* Giới hạn chiều cao */
+    overflow-y: auto;
+    display: none;
+    top: 100%; /* Đặt ngay dưới ô tìm kiếm */
+    left: 0;
+    z-index: 1000; /* Đảm bảo hiển thị trên các phần khác */
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Đổ bóng nhẹ */
+}
+
+    .suggestions-dropdown li {
+        padding: 10px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        color: #333;
+    }
+
+        .suggestions-dropdown li:hover {
+            background-color: #e6f2ff;
+        }
+
+    .suggestions-dropdown img {
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+    }
+
 
 .profile-pic {
     width: 50px; /* Điều chỉnh kích thước theo ý muốn */
@@ -167,5 +206,26 @@ nav ul {
 /* Hiện dropdown khi hover vào user-icon */
 .user-dropdown:hover .dropdown-menu {
     display: block;
+}
+
+.cart-container {
+    position: relative;
+    margin-right: 20px;
+}
+
+.cart-icon {
+    width: 30px;
+    height: auto;
+}
+
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 50%;
 }
 
