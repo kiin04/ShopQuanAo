@@ -1,19 +1,120 @@
-﻿
-@{
+﻿@{
     Layout = null;
+    ViewBag.Title = "Admin Dashboard";
+
+    var ordersByStatus = ViewBag.OrdersByStatus as List<WebMusic.Models.OrderStatusViewModel>;
+    var revenueByMonth = ViewBag.RevenueByMonth as List<WebMusic.Models.RevenueByMonthViewModel>;
 }
 
 <!DOCTYPE html>
-
-<html>
+<html lang="vi">
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="@Url.Content("~/Content/css/dashboard.css")" />
 </head>
-@Html.Partial("_HeaderAdmin")
+
 <body>
-    <div> 
-        <a>ABC</a>
+    @Html.Partial("_HeaderAdmin")
+
+    <h2>Thống kê Đơn hàng & Doanh thu</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Tổng số đơn hàng</div>
+                <div class="panel-body">
+                    <h3>@(ViewBag.TotalOrders ?? "Không có dữ liệu")</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="panel panel-success">
+                <div class="panel-heading">Tổng doanh thu</div>
+                <div class="panel-body">
+                    <h3>@(ViewBag.TotalRevenue != null ? ViewBag.TotalRevenue.ToString("N0") + " VNĐ" : "Không có dữ liệu")</h3>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <h3>Đơn hàng theo trạng thái</h3>
+    @if (ordersByStatus != null && ordersByStatus.Any())
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Trạng thái</th>
+                    <th>Số lượng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ordersByStatus)
+                {
+                    <tr>
+                        <td>@item.Status</td>
+                        <td>@item.Count</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Không có dữ liệu đơn hàng.</p>
+    }
+
+    <h3>Doanh thu theo tháng</h3>
+
+    @if (revenueByMonth != null && revenueByMonth.Any())
+    {
+        <canvas id="revenueChart" width="700" height="250"></canvas>
+    }
+    else
+    {
+        <p>Không có dữ liệu doanh thu.</p>
+    }
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var revenueData = @Html.Raw(Json.Encode(ViewBag.RevenueByMonth));
+
+        if (revenueData && revenueData.length > 0) {
+            var ctx = document.getElementById('revenueChart').getContext('2d');
+
+            var labels = revenueData.map(d => d.Month + '/' + d.Year);
+            var values = revenueData.map(d => d.Revenue);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Doanh thu theo tháng',
+                        data: values,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString() + " VNĐ";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    });
+    </script>
 </body>
 </html>

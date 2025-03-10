@@ -1,0 +1,113 @@
+﻿@model WebMusic.Models.Order
+<link rel="stylesheet" href="~/Content/css/orderdetail.css" />
+
+@if (Model != null)
+{
+    <p><strong>Khách hàng:</strong> @(Model.Customer?.FullName ?? "Khách vãng lai")</p>
+    <p><strong>Ngày đặt: </strong> @(Model.OrderDate.HasValue ? Model.OrderDate.Value.ToString("dd/MM/yyyy HH:mm") : "Không xác định")</p>
+    <p><strong>Tổng tiền:</strong> @Model.TotalAmount.ToString("N0") VNĐ</p>
+    <p><strong>Trạng thái:</strong> @Model.Status</p>
+
+    <h3>Danh sách sản phẩm</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Hình ảnh</th>
+                <th>Sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Đơn giá</th>
+                <th>Thành tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var detail in Model.OrderDetails)
+            {
+                <tr>
+                    <td>
+                        <img src="@detail.Product.ImageURL" alt="@detail.Product.ProductName" class="cart-product-image">
+                    </td>
+                    <td>@detail.Product.ProductName</td>
+                    <td>@detail.Quantity</td>
+                    <td>@detail.Price.ToString("N0") VNĐ</td>
+                    <td>@((detail.Quantity * detail.Product.Price).ToString("N0")) VNĐ</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <!-- Nút Hủy và Xác nhận -->
+    <div class="order-actions">
+        <button class="btn btn-danger" id="btnCancelOrder" data-id="@Model.OrderID">Hủy đơn</button>
+        <button class="btn btn-success" id="btnConfirmOrder" data-id="@Model.OrderID">Xác nhận đơn</button>
+    </div>
+}
+else
+{
+    <p>Không tìm thấy đơn hàng!</p>
+}
+<script>
+    $(document).ready(function () {
+    // Lấy trạng thái đơn hàng hiện tại
+    var orderStatus = $("#orderStatus").text().trim().toLowerCase();
+
+    // Kiểm tra nếu đơn hàng đã bị hủy hoặc đã giao thì vô hiệu hóa các nút
+    if (orderStatus === "đã hủy" || orderStatus === "đã giao") {
+        $("#btnConfirmOrder, #btnCancelOrder").prop("disabled", true);
+    }
+
+    // Xác nhận đơn hàng
+    $("#btnConfirmOrder").click(function () {
+        if (orderStatus === "đã hủy" || orderStatus === "đã giao") {
+            alert("Không thể thay đổi trạng thái của đơn hàng đã bị hủy hoặc đã giao!");
+            return;
+        }
+
+        var orderId = $(this).data("id");
+        if (confirm("Bạn có chắc chắn muốn xác nhận đơn hàng này?")) {
+            $.ajax({
+                url: '@Url.Action("ConfirmOrder", "Admin")',
+                type: 'POST',
+                data: { id: orderId },
+                success: function (response) {
+                    if (response.success) {
+                        $("#orderStatus").text("Đã giao");
+                        $("#btnConfirmOrder, #btnCancelOrder").prop("disabled", true);
+                        alert("Đơn hàng đã được xác nhận! Hãy reload lại trang!");
+                    } else {
+                        alert("Lỗi khi xác nhận đơn hàng: " + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Lỗi AJAX:", error);
+                    alert("Có lỗi xảy ra! Vui lòng kiểm tra console.");
+                }
+            });
+        }
+    });
+
+    // Hủy đơn hàng
+    $("#btnCancelOrder").click(function () {
+        if (orderStatus === "đã hủy" || orderStatus === "đã giao") {
+            alert("Không thể thay đổi trạng thái của đơn hàng đã bị hủy hoặc đã giao!");
+            return;
+        }
+
+        var orderId = $(this).data("id");
+        if (confirm("Bạn có chắc chắn muốn hủy đơn hàng này?")) {
+            $.ajax({
+                url: '@Url.Action("CancelOrder", "Admin")',
+                type: 'POST',
+                data: { id: orderId },
+                success: function (response) {
+                    if (response.success) {
+                        $("#orderStatus").text("Đã hủy");
+                        $("#btnConfirmOrder, #btnCancelOrder").prop("disabled", true);
+                        alert("Đơn hàng đã bị hủy! Hãy reload lại trang!");
+                    } else {
+                        alert("Lỗi khi hủy đơn hàng!");
+                    }
+                }
+            });
+        }
+    });
+});
+</script>

@@ -24,6 +24,7 @@ namespace WebMusic.Controllers
             var customer = database.Customers.FirstOrDefault(c => c.Email == Email && c.PasswordHash == Password);
             if (customer != null)
             {
+                Session["Customer"] = customer; // Lưu đối tượng Customer vào Session
                 Session["Avatar"] = customer.Avatar ?? "/Content/images/profile1.png";
                 Session["Email"] = customer.Email;
                 Session["CurrentUserId"] = customer.CustomerID;

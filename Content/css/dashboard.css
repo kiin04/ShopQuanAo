@@ -1,0 +1,95 @@
+﻿/* Tổng thể */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 20px;
+    padding: 0;
+    padding-top: 80px;
+}
+
+/* Tiêu đề */
+h2 {
+    color: #343a40;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+h3 {
+    color: #343a40;
+    text-align: center;
+    font-weight: bold;  
+    margin-top: 20px;
+}
+
+/* Panel thống kê */
+.panel {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.panel-heading {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+}
+
+.panel-primary .panel-heading {
+    background-color: #007bff;
+    color: white;
+}
+
+.panel-success .panel-heading {
+    background-color: #28a745;
+    color: white;
+}
+
+.panel-body h3 {
+    font-size: 2rem;
+    color: #007bff;
+}
+
+/* Bảng thống kê */
+.table {
+    width: 80%;
+    margin: 20px auto;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table-bordered th {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    padding: 10px;
+}
+
+.table-bordered td {
+    text-align: center;
+    font-size: 14px;
+    padding: 8px;
+}
+
+/* Biểu đồ */
+#revenueChart {
+    display: block;
+    margin: 30px auto;
+    max-width: 700px;
+}
+
+/* Hiệu ứng hover cho bảng */
+.table-striped tbody tr:hover {
+    background-color: #f1f1f1;
+    transition: 0.3s;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .table {
+        width: 100%;
+    }
+}

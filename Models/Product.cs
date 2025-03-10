@@ -17,6 +17,7 @@ namespace WebMusic.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Product()
         {
+            this.Carts = new HashSet<Cart>();
             this.Comments = new HashSet<Comment>();
             this.OrderDetails = new HashSet<OrderDetail>();
         }
@@ -30,11 +31,25 @@ namespace WebMusic.Models
         public string ImageURL { get; set; }
         public Nullable<System.DateTime> CreatedAt { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Cart> Carts { get; set; }
         public virtual Category Category { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public string Name { get; internal set; }
+    }
+    public class OrderStatusViewModel
+    {
+        public string Status { get; set; }
+        public int Count { get; set; }
+    }
+
+    public class RevenueByMonthViewModel
+    {
+        public int Year { get; set; }
+        public int Month { get; set; }
+        public decimal Revenue { get; set; }
     }
 }

@@ -1,0 +1,141 @@
+﻿/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+    height: 100%;
+}
+
+/* Định dạng container chính của trang liên hệ */
+.contact-container {
+    height: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+    /* Tiêu đề trang liên hệ */
+    .contact-container h1 {
+        font-size: 2.5rem;
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+/* Thông tin liên hệ */
+.contact-info {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+    /* Thông tin mô tả */
+    .contact-info p {
+        font-size: 1.2rem;
+        color: #555;
+        margin: 10px 0;
+    }
+
+    /* Avatar Facebook */
+    .contact-info .avatar {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 2px solid #ddd;
+        margin: 20px 0;
+        transition: transform 0.3s ease;
+    }
+
+        /* Khi hover avatar */
+        .contact-info .avatar:hover {
+            transform: scale(1.1);
+        }
+
+    /* Định dạng tên Facebook */
+    .contact-info .facebook-name {
+        font-size: 1.4rem;
+        color: black;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+        /* Hiệu ứng hover cho tên Facebook */
+        .contact-info .facebook-name:hover {
+            color: #0056b3;
+        }
+
+    /* Định dạng liên kết khi hover */
+    .contact-info a {
+        text-decoration: none;
+        color: #007bff;
+        font-weight: bold;
+    }
+
+        .contact-info a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+
+/* Bố cục chính cho phần địa chỉ */
+.location-section {
+    text-align: center;
+    margin: 20px 0;
+}
+
+    .location-section h2 {
+        margin-bottom: 5px;
+        font-size: 22px;
+        color: #333;
+    }
+
+    .location-section p {
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 15px;
+    }
+
+/* Bố cục chính cho phần bản đồ */
+.map-container {
+    width: 90%; /* Chiều rộng tối đa 90% màn hình */
+    max-width: 1000px; /* Giới hạn chiều rộng */
+    aspect-ratio: 16 / 9; /* Tự động giữ tỷ lệ 16:9 */
+    margin: 0 auto 30px; /* Căn giữa và tạo khoảng cách dưới */
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f8f8f8; /* Màu nền nhẹ */
+}
+
+    /* Tùy chỉnh iframe bản đồ */
+    .map-container iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        border-radius: 12px;
+    }
+
+/* Đáp ứng trên màn hình nhỏ */
+@media (max-width: 768px) {
+    .map-container {
+        aspect-ratio: 4 / 3; /* Điều chỉnh tỷ lệ trên tablet */
+    }
+}
+
+@media (max-width: 480px) {
+    .map-container {
+        aspect-ratio: 1 / 1; /* Tỷ lệ vuông trên điện thoại nhỏ */
+    }
+}
+
+
+
+
+

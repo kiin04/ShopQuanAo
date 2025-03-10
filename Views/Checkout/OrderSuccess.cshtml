@@ -1,0 +1,63 @@
+﻿@model WebMusic.Models.Order
+
+@{
+    Layout = null;
+}
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Đặt Hàng Thành Công</title>
+    <link rel="stylesheet" href="~/Content/css/success.css" />
+</head>
+
+@Html.Partial("_Header")
+
+<h2>Đặt Hàng Thành Công!</h2>
+
+<div class="order-success-container">
+    <h3>Mã đơn hàng: #@Model.OrderID</h3>
+    <p>Ngày đặt: @(Model.OrderDate.HasValue ? Model.OrderDate.Value.ToString("dd/MM/yyyy HH:mm") : "Không xác định")</p>
+    <p>Trạng thái: <strong>@Model.Status</strong></p>
+
+    @if (Model.Customer != null)
+    {
+        <h3>Thông tin khách hàng</h3>
+        <p><strong>Họ và tên:</strong> @Model.Customer.FullName</p>
+        <p><strong>Email:</strong> @Model.Customer.Email</p>
+        <p><strong>Địa chỉ:</strong> @Model.Customer.Address</p>
+        <p><strong>Số điện thoại:</strong> @Model.Customer.Phone</p>
+    }
+
+    <h3>Chi tiết đơn hàng</h3>
+    <table>
+        <thead>
+            <tr>
+                <td>Hình ảnh</td>
+                <th>Sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Giá</th>
+                <th>Tổng</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderDetails)
+            {
+                <tr>
+                    <td>
+                        <img src="@item.Product.ImageURL" alt="@item.Product.ProductName" class="cart-product-image">
+                    </td>
+                    <td>@item.Product.ProductName</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Price.ToString("N0") VNĐ</td>
+                    <td>@((item.Quantity * item.Price).ToString("N0")) VNĐ</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3>Tổng tiền: <span>@Model.TotalAmount.ToString("N0") VNĐ</span></h3>
+
+    <a href="/Cart/Cart" class="btn-back-home">← Về trang chủ</a>
+</div>
+
+@Html.Partial("_Footer")

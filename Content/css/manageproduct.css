@@ -9,8 +9,26 @@ body {
 .main-content {
     margin-top: 80px; /* Điều chỉnh giá trị theo chiều cao của _HeaderAdmin */
     padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+p {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-muted {
+    color: #888;
+}
 
 /* Bảng sản phẩm */
 .table {
@@ -31,6 +49,7 @@ body {
     .table th {
         background-color: #007bff;
         color: #fff;
+        text-transform: uppercase;
     }
 
     .table td img {
@@ -120,3 +139,148 @@ body {
     transition: opacity 0.5s ease-out;
 }
 
+/* Nút xem chi tiết */
+.btn-info {
+    background-color: #17a2b8;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+    .btn-info:hover {
+        background-color: #138496;
+    }
+
+
+/* Ẩn modal mặc định */
+#orderDetailsModal {
+    display: none;
+}
+/* Modal Popup */
+.modal-content {
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border: none;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-header {
+    background: #007bff;
+    color: white;
+    border-radius: 10px 10px 0 0;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+/* Khi không có đơn hàng */
+.text-center {
+    text-align: center;
+    font-size: 18px;
+    margin-top: 20px;
+    color: #888;
+}
+
+/* Làm mờ nền khi mở popup */
+.modal {
+    justify-items: center;
+}
+
+/* Thiết lập modal */
+.modal-content {
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border: none;
+}
+
+/* Tiêu đề của modal */
+.modal-header {
+    position: relative; /* Giữ vị trí tương đối để đặt nút đóng */
+    background-color: #007bff;
+    color: white;
+    border-radius: 10px 10px 0 0;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between; /* Đẩy nút về phía phải */
+    align-items: center;
+}
+    /* Định dạng nút đóng (X) */
+    .modal-header .close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        font-weight: bold;
+        color: red; /* Màu đỏ */
+        cursor: pointer;
+        opacity: 0.8;
+        position: absolute;
+        right: 15px; /* Đưa nút về sát mép phải */
+        top: 50%;
+        transform: translateY(-50%); /* Căn giữa theo chiều dọc */
+    }
+
+        /* Khi hover vào nút đóng */
+        .modal-header .close:hover {
+            opacity: 1;
+            color: darkred; /* Màu đậm hơn khi hover */
+        }
+
+/* Nội dung modal */
+.modal-body {
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+/* Bảng trong popup */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+    .table th, .table td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: center;
+    }
+
+    .table th {
+        background-color: #007bff;
+        color: white;
+    }
+
+/* Hình ảnh sản phẩm */
+.cart-product-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+/* Tăng kích thước modal */
+.modal-lg {
+    max-width: 900px;
+}
+
+/* Hiệu ứng hiển thị modal */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-content {
+    animation: fadeIn 0.3s ease-in-out;
+}

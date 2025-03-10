@@ -1,0 +1,44 @@
+﻿@{
+    Layout = null;
+}
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Contact</title>
+    <link rel="stylesheet" href="~/Content/css/contact.css" />
+</head>
+
+@Html.Partial("_Header")
+
+<!-- Sử dụng class contact-container để tránh xung đột với các phần khác -->
+<div class="contact-container">
+    <h1>Liên Hệ</h1>
+    <div class="contact-info">
+        <p>Chúng tôi luôn sẵn sàng hỗ trợ bạn!</p>
+        <a href="https://www.facebook.com/minhpham1603/" target="_blank">
+            <!-- Avatar Facebook -->
+            <img src="https://scontent.fsgn2-9.fna.fbcdn.net/v/t39.30808-6/471146685_2933882746771357_6643271307307568743_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeF0WsADDHX1Kjm3b9497797JRObOb9vOmYlE5s5v286Zu59CnXVecDy6uHMsM4k4C4bcz3tGEkIBbVSMzBI_SpG&_nc_ohc=DjB5jMAmF0EQ7kNvgGdp9bE&_nc_oc=AdhrjtCrNzvFOB7kaSMRlT0Bw4wsRuM21Gv3NpMtF_B4aJ7xOkgfpru72t48O17k-zU&_nc_zt=23&_nc_ht=scontent.fsgn2-9.fna&_nc_gid=Asp0JWQHDPuCnV3R1QVnZbB&oh=00_AYGifc2DwnwwJPo3mjYNe1PmyCM380S6f196T2pa72H37A&oe=67D21A4B" alt="Avatar Facebook" class="avatar" />
+        </a>
+        <p><a href="https://www.facebook.com/minhpham1603/" target="_blank" class="facebook-name">Minh Phạm</a></p> <!-- Tên Facebook -->
+        <p>Nhấp vào ảnh để liên hệ với chúng tôi trên Facebook.</p>
+
+
+    </div>
+</div>
+<!-- Phần bản đồ -->
+<div class="location-section">
+    <h2>Địa Chỉ:</h2> 
+    <p class="address">806 QL22, ấp Mỹ Hoà 3, Hóc Môn, Hồ Chí Minh</p>
+    <div class="map-container">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2770.6524649493017!2d106.60120253977288!3d10.86520641306422!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752b088de30f3b%3A0xd2140740d360f705!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBOZ2_huqFpIG5n4buvIC0gVGluIGjhu41jIFRow6BuaCBwaOG7kSBI4buTIENow60gTWluaCAoSFVGTElUKSBDxqEgc-G7nyBIw7NjIE3DtG4!5e0!3m2!1svi!2s!4v1741443816195!5m2!1svi!2s"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+</div>
+
+
+
+@Html.Partial("_Footer")
+

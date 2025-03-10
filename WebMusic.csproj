@@ -138,13 +138,22 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\CartController.cs" />
+    <Compile Include="Controllers\CheckoutController.cs" />
+    <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\DanhMucController.cs" />
     <Compile Include="Controllers\DetailController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TemplateMethod\AdminRepository.cs" />
+    <Compile Include="Models\TemplateMethod\BaseUserRepository.cs" />
+    <Compile Include="Models\Cart.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Category.cs">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -155,6 +164,8 @@
     <Compile Include="Models\Customer.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TemplateMethod\CustomerRepository.cs" />
+    <Compile Include="Models\Singleton\DatabaseContextSingleton.cs" />
     <Compile Include="Models\Model1.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -179,6 +190,7 @@
     <Compile Include="Models\Product.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Prototype\ProductRepository.cs" />
     <Compile Include="Models\Supplier.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -209,23 +221,33 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\css\addcategory.css" />
+    <Content Include="Content\css\cart.css" />
+    <Content Include="Content\css\contact.css" />
     <Content Include="Content\css\danhmuc.css" />
+    <Content Include="Content\css\dashboard.css" />
     <Content Include="Content\css\detail.css" />
     <Content Include="Content\css\footer.css" />
     <Content Include="Content\css\header.css" />
     <Content Include="Content\css\headeradmin.css" />
     <Content Include="Content\css\login.css" />
     <Content Include="Content\css\manageproduct.css" />
+    <Content Include="Content\css\orderdetail.css" />
     <Content Include="Content\css\profile.css" />
+    <Content Include="Content\css\seacrh.css" />
     <Content Include="Content\css\style.css" />
+    <Content Include="Content\css\success.css" />
+    <Content Include="Content\css\thanhtoan.css" />
     <Content Include="Content\images\7.jpg" />
     <Content Include="Content\images\back.png" />
+    <Content Include="Content\images\cart2.png" />
     <Content Include="Content\images\more.png" />
     <Content Include="Content\images\pants.png" />
     <Content Include="Content\images\profile1.png" />
+    <Content Include="Content\images\refresh.png" />
     <Content Include="Content\images\shirt.png" />
     <Content Include="Content\images\shoes.png" />
     <Content Include="Content\images\skirt.png" />
+    <Content Include="Content\js\comment.js" />
     <Content Include="Content\js\previewimage.js" />
     <Content Include="Content\js\successmessage.js" />
     <Content Include="favicon.ico" />
@@ -296,6 +318,14 @@
     <Content Include="Views\Admin\EditCustomer.cshtml" />
     <Content Include="Views\DanhMuc\DanhMuc.cshtml" />
     <Content Include="Views\Detail\Detail.cshtml" />
+    <Content Include="Views\Cart\Cart.cshtml" />
+    <Content Include="Views\Checkout\ThanhToan.cshtml" />
+    <Content Include="Views\Checkout\OrderSuccess.cshtml" />
+    <Content Include="Views\Admin\ManagerOrder.cshtml" />
+    <Content Include="Views\Admin\OrderDetails.cshtml" />
+    <Content Include="Views\Search\Search.cshtml" />
+    <Content Include="Views\Profile\OrderDetails.cshtml" />
+    <Content Include="Views\Contact\Contact.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

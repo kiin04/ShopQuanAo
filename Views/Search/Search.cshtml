@@ -1,0 +1,31 @@
+﻿@{
+    Layout = null;
+}
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kết quả tìm kiếm</title>
+    <link rel="stylesheet" href="~/Content/css/seacrh.css" />
+</head>
+@Html.Partial("_Header")
+<h2>Kết quả tìm kiếm</h2>
+
+@if (Model.Count == 0)
+{
+    <p>Không tìm thấy sản phẩm nào.</p>
+}
+else
+{
+    <div class="product-list">
+        @foreach (var product in Model)
+        {
+            <div class="product-item">
+                <img src="@Url.Content(product.ImageURL)" alt="@product.ProductName" class="product-image" />
+                <h3>@product.ProductName</h3>
+                <p>Giá: @product.Price.ToString("N0") VNĐ</p>
+                <p>@product.Description</p>
+                <a href="@Url.Action("Detail", "Detail", new { id = product.ProductID })" class="btn-choose">Xem chi tiết</a>
+            </div>
+        }
+    </div>
+}
+@Html.Partial("_Footer")
