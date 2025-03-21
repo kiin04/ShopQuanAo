@@ -42,7 +42,7 @@
                         <td>@product.Category.CategoryName</td>
                         <td>@product.Price.ToString("N0") VNĐ</td>
                         <td>@product.Stock</td>
-                        <td>@product.Description</td>
+                        <td class="description-cell" title="@product.Description">@product.Description</td>
                         <td>
                             @{
                                 var imageUrl = !string.IsNullOrEmpty(product.ImageURL) ? Url.Content(product.ImageURL) : "/Content/images/no-image.png";

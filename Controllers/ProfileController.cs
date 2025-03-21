@@ -78,5 +78,103 @@ namespace WebMusic.Controllers
         }
 
 
+        public ActionResult EditProfile()
+        {
+            if (Session["CurrentUserId"] == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
+
+            int userId = (int)Session["CurrentUserId"];
+            string role = Session["Role"]?.ToString();
+
+            if (role == "Admin")
+            {
+                var admin = db.Users.FirstOrDefault(u => u.UserID == userId);
+                if (admin != null)
+                {
+                    var model = new UserViewModel
+                    {
+                        ID = admin.UserID,
+                        FullName = admin.Username,
+                        Email = admin.Email,
+                        Role = admin.Role
+                    };
+                    return View(model);
+                }
+            }
+            else
+            {
+                var customer = db.Customers.FirstOrDefault(c => c.CustomerID == userId);
+                if (customer != null)
+                {
+                    var model = new UserViewModel
+                    {
+                        ID = customer.CustomerID,
+                        FullName = customer.FullName,
+                        Email = customer.Email,
+                        Phone = customer.Phone,
+                        Address = customer.Address,
+                        Avatar = customer.Avatar
+                    };
+                    return View(model);
+                }
+            }
+
+            return RedirectToAction("ProfileUser");
+        }
+
+        [HttpPost]
+        public ActionResult EditProfile(UserViewModel model, HttpPostedFileBase avatarFile)
+        {
+            if (Session["CurrentUserId"] == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
+
+            int userId = (int)Session["CurrentUserId"];
+            string role = Session["Role"]?.ToString();
+
+            if (role == "Admin")
+            {
+                var admin = db.Users.FirstOrDefault(u => u.UserID == userId);
+                if (admin != null)
+                {
+                    admin.Username = model.FullName;
+                    admin.Email = model.Email;
+                    db.SaveChanges();
+                    Session["Username"] = admin.Username;
+                }
+            }
+            else
+            {
+                var customer = db.Customers.FirstOrDefault(c => c.CustomerID == userId);
+                if (customer != null)
+                {
+                    customer.FullName = model.FullName;
+                    customer.Email = model.Email;
+                    customer.Phone = model.Phone;
+                    customer.Address = model.Address;
+
+                    if (avatarFile != null && avatarFile.ContentLength > 0)
+                    {
+                        string fileName = System.IO.Path.GetFileName(avatarFile.FileName);
+                        string path = System.IO.Path.Combine(Server.MapPath("~/Content/avatars/"), fileName);
+                        avatarFile.SaveAs(path);
+                        customer.Avatar = "/Content/avatars/" + fileName;
+                        Session["Avatar"] = customer.Avatar;
+                    }
+
+                    db.SaveChanges();
+                    Session["FullName"] = customer.FullName;
+                    Session["Phone"] = customer.Phone;
+                    Session["Address"] = customer.Address;
+                }
+            }
+
+            return RedirectToAction("ProfileUser");
+        }
+
+
     }
 }

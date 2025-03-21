@@ -56,7 +56,7 @@ namespace WebMusic
             container.RegisterType<ShopQuanAoEntities>();
 
             // Đăng ký Repository
-            container.RegisterType<IProductRepository, ProductRepository>();
+            container.RegisterType<IProductRepository, Repositories.ProductRepository>();
 
             // Đăng ký Service
             container.RegisterType<IProductService, ProductService>();

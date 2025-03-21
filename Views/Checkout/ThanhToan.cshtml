@@ -29,15 +29,28 @@
             <label>Số điện thoại:</label>
             <input type="text" name="PhoneNumber" value="@ViewBag.PhoneNumber" required />
 
-            <!-- Chọn phương thức thanh toán bằng dropdown -->
             <label>Phương thức thanh toán:</label>
-            <select name="PaymentMethod" required>
+            <select name="PaymentMethod" id="payment-method" required>
                 <option value="COD">Thanh toán khi nhận hàng (COD)</option>
                 <option value="Online">Thanh toán online (Ví điện tử / Thẻ ngân hàng)</option>
             </select>
 
             <button type="submit" class="btn-confirm">Xác nhận đặt hàng</button>
         </form>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            document.getElementById('confirm-order-form').addEventListener('submit', function (event) {
+                let paymentMethod = document.getElementById('payment-method').value;
+
+                if (paymentMethod === 'Online') {
+                    event.preventDefault(); // Ngăn form gửi đi
+
+                    // Chuyển hướng sang VNPay, có thể thêm tham số đơn hàng vào URL nếu cần
+                    window.location.href = "http://sandbox.vnpayment.vn/tryitnow/Home/CreateOrder?returnUrl=" + encodeURIComponent(window.location.origin + "/Checkout/VNPayReturn");
+                }
+            });
+        </script>
+
         <!-- Nút trở lại giỏ hàng -->
         <a href="/Cart/Cart" class="btn-back-cart">← Trở lại giỏ hàng</a>
     </div>

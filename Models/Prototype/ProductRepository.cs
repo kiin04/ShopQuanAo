@@ -58,11 +58,16 @@ namespace WebMusic.Models
 
         public bool DeleteProduct(int id)
         {
-            var product = _db.Products.Find(id);
+            var product = _db.Products
+                             .FirstOrDefault(p => p.ProductID == id);
+
             if (product == null)
             {
                 return false;
             }
+
+            // Xóa tất cả các đơn hàng liên quan trước (nếu muốn xóa cứng)
+            _db.OrderDetails.RemoveRange(product.OrderDetails);
 
             _db.Products.Remove(product);
             _db.SaveChanges();

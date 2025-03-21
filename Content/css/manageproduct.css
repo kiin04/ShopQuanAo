@@ -185,6 +185,16 @@ p {
     color: #888;
 }
 
+/* Giới hạn chiều cao của mô tả và thêm hiệu ứng dấu "..." */
+.description-cell {
+    max-width: 200px; /* Điều chỉnh theo mong muốn */
+    max-height: 50px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
 /* Làm mờ nền khi mở popup */
 .modal {
     justify-items: center;

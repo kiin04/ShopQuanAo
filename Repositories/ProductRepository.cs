@@ -20,6 +20,7 @@ namespace WebMusic.Repositories
         public void Add(Product product)
         {
             _db.Products.Add(product);
+            _db.SaveChanges(); // Thêm SaveChanges() để lưu vào DB
         }
 
         public void Update(Product product)
@@ -33,6 +34,8 @@ namespace WebMusic.Repositories
                 existingProduct.Stock = product.Stock;
                 existingProduct.Description = product.Description;
                 existingProduct.ImageURL = product.ImageURL;
+                _db.SaveChanges(); // Lưu thay đổi vào DB
+
             }
         }
 
@@ -41,7 +44,11 @@ namespace WebMusic.Repositories
             var product = _db.Products.Find(id);
             if (product != null)
             {
+                _db.OrderDetails.RemoveRange(product.OrderDetails);
+
                 _db.Products.Remove(product);
+                _db.SaveChanges(); // Lưu thay đổi sau khi xóa
+
             }
         }
 
