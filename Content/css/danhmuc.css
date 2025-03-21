@@ -116,3 +116,50 @@ body {
     .product-item .btn:hover {
         background-color: #0056b3;
     }
+
+
+.pagination-container {
+    text-align: center;
+    margin-left: 130px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+}
+
+    .pagination li {
+        margin: 0 5px;
+    }
+
+        .pagination li a,
+        .pagination li span {
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #007bff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            transition: background 0.3s, color 0.3s;
+        }
+
+            .pagination li a:hover {
+                background-color: #007bff;
+                color: #fff;
+            }
+
+    .pagination .active span {
+        background-color: #007bff;
+        color: #fff;
+        font-weight: bold;
+        border-color: #007bff;
+    }
+
+    .pagination .disabled span {
+        color: #ccc;
+        border-color: #ddd;
+        background-color: #f8f9fa;
+        cursor: not-allowed;
+    }

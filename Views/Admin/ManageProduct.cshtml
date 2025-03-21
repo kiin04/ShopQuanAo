@@ -1,4 +1,7 @@
-﻿@{
+﻿@using WebMusic.Models
+@model PagedList.IPagedList<Product>
+@using PagedList.Mvc
+@{
     Layout = null;
 }
 <head>
@@ -33,7 +36,7 @@
                 </div>
             }
             <tbody>
-                @{ int stt = 1; }
+                @{ int stt = (Model.PageNumber - 1) * Model.PageSize + 1; }
                 @foreach (var product in Model)
                 {
                     <tr>
@@ -61,6 +64,17 @@
                 }
             </tbody>
         </table>
+        <div class="pagination-container">
+            @Html.PagedListPager(Model, page => Url.Action("ManageProduct", new { page }),
+                new PagedListRenderOptions
+                {
+                    Display = PagedListDisplayMode.IfNeeded,
+                    DisplayPageCountAndCurrentLocation = false,
+                    MaximumPageNumbersToDisplay = 5,
+                    DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                    DisplayLinkToNextPage = PagedListDisplayMode.Always
+                })
+        </div>
     }
     else
     {

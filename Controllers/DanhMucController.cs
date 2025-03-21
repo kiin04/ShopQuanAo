@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebMusic.Models;
+using PagedList;
 
 namespace WebMusic.Controllers
 {
@@ -11,18 +12,21 @@ namespace WebMusic.Controllers
     {
         ShopQuanAoEntities db = new ShopQuanAoEntities();
         // GET: DanhMuc
-        public ActionResult DanhMuc(int? categoryId, string sortOrder)
+        public ActionResult DanhMuc(int? categoryId, string sortOrder, int? page)
         {
-            var products = db.Products.AsQueryable(); // Truy vấn danh sách sản phẩm
+            int pageSize = 15; // Số sản phẩm mỗi trang
+            int pageNumber = (page ?? 1); // Trang mặc định
 
-            // Lọc theo danh mục nếu có
+            var products = db.Products.AsQueryable();
+
+            // Lọc theo danh mục
             if (categoryId.HasValue && categoryId != 0)
             {
                 products = products.Where(p => p.CategoryID == categoryId);
             }
-            ViewBag.SelectedCategoryId = categoryId; // Lưu danh mục đã chọn
+            ViewBag.SelectedCategoryId = categoryId;
 
-            // Sắp xếp theo giá nếu có
+            // Sắp xếp theo giá hoặc mặc định theo ProductID
             switch (sortOrder)
             {
                 case "price_asc":
@@ -34,15 +38,16 @@ namespace WebMusic.Controllers
                     ViewBag.SelectedSort = "price_desc";
                     break;
                 default:
+                    products = products.OrderBy(p => p.ProductID); // Sắp xếp mặc định để dùng Skip()
                     ViewBag.SelectedSort = null;
                     break;
             }
 
-            ViewBag.Categories = db.Categories.ToList(); // Truyền danh mục vào View
-            return View(products.ToList()); // Trả danh sách sản phẩm đã lọc
+            ViewBag.Categories = db.Categories.ToList();
+
+            // Áp dụng phân trang
+            return View(products.ToPagedList(pageNumber, pageSize));
         }
-
-
 
     }
 }

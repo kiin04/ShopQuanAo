@@ -1,4 +1,8 @@
-﻿@{
+﻿@using PagedList.Mvc
+@using WebMusic.Models
+@model PagedList.IPagedList<Order>
+
+@{
     Layout = null;
 }
 
@@ -45,6 +49,18 @@
                 }
             </tbody>
         </table>
+        <div class="pagination-container">
+            @Html.PagedListPager(Model, page => Url.Action("ManagerOrder", new { page }),
+                new PagedListRenderOptions
+                {
+                    Display = PagedListDisplayMode.IfNeeded,
+                    DisplayPageCountAndCurrentLocation = false,
+                    MaximumPageNumbersToDisplay = 5,
+                    DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                    DisplayLinkToNextPage = PagedListDisplayMode.Always
+                })
+        </div>
+
     }
 </div>
 
@@ -79,7 +95,7 @@
                 data: { id: orderId },
                 success: function (response) {
                     $("#orderDetailsContent").html(response); // Load nội dung vào modal
-                    $("#orderDetailsModal").css("display", "block").addClass("show"); // Hiển thị modal                
+                    $("#orderDetailsModal").css("display", "block").addClass("show"); // Hiển thị modal
                 },
                 error: function () {
                     alert("Lỗi khi tải dữ liệu!");

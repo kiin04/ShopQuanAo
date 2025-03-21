@@ -191,3 +191,18 @@ p {
     }
 }
 
+.advertisement {
+    margin: 30px auto;
+    max-width: 90%;
+    text-align: center;
+    background: none; /* Không cần nền */
+    padding: 0;
+    border-radius: 10px;
+}
+
+.ad-banner {
+    width: 100%;
+    max-height: 500px; /* Điều chỉnh chiều cao */
+    object-fit: cover;
+    border-radius: 10px;
+}

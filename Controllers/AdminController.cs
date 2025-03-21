@@ -8,6 +8,9 @@ using System.Web.UI.WebControls;
 using WebMusic.Models;
 using WebMusic.Models.TemplateMethod;
 using WebMusic.Services;
+using PagedList;
+using PagedList.Mvc;
+using System.Web.UI;
 
 namespace WebMusic.Controllers
 {
@@ -82,10 +85,16 @@ namespace WebMusic.Controllers
         }
 
 
-        public ActionResult ManageProduct()
+        public ActionResult ManageProduct(int? page)
         {
-            var products = _productService.GetAllProducts();
-            return View(products);
+            int pageSize = 10; // Số sản phẩm mỗi trang
+            int pageNumber = (page ?? 1); // Trang mặc định là 1 nếu không có tham số
+
+            var products = _productService.GetAllProducts()
+                                          .OrderBy(p => p.ProductID) // Sắp xếp theo ID
+                                          .ToPagedList(pageNumber, pageSize); // Chuyển sang IPagedList
+
+            return View(products); // Trả về IPagedList<Product>
         }
 
         public ActionResult AddProduct()
@@ -358,13 +367,17 @@ namespace WebMusic.Controllers
             return RedirectToAction("ManagerUser");
         }
 
-        public ActionResult ManagerOrder()
+        public ActionResult ManagerOrder(int? page)
         {
+            int pageSize = 10; // Số đơn hàng mỗi trang
+            int pageNumber = (page ?? 1); // Nếu không có tham số, mặc định trang 1
+
             var orders = _db.Orders
+                           .Include("Customer") // Load thông tin khách hàng
                            .OrderByDescending(o => o.OrderDate)
-                           .Include("OrderDetails.Product") // Load chi tiết đơn hàng
-                           .ToList();
-            return View(orders);
+                           .ToPagedList(pageNumber, pageSize);
+
+            return View(orders); // Trả về IPagedList<Order>
         }
 
         public ActionResult OrderDetails(int id)
