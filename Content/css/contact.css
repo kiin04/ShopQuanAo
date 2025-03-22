@@ -7,6 +7,20 @@ body {
     background-color: #f0f0f0;
     height: 100%;
 }
+/* Hiển thị danh sách liên hệ theo hàng ngang */
+.contact-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+}
+
+/* Căn chỉnh từng mục liên hệ */
+.contact-item {
+    text-align: center;
+    flex: 1 1 200px; /* Định nghĩa chiều rộng linh hoạt */
+    max-width: 200px;
+}
 
 /* Định dạng container chính của trang liên hệ */
 .contact-container {
