@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -15,6 +16,8 @@ namespace WebMusic.Controllers
         {
             var categories = db.Categories.ToList(); // Lấy danh mục từ database
             var products = db.Products.Take(5).ToList(); // Lấy 5 sản phẩm bất kỳ
+
+
 
             // Truyền dữ liệu qua ViewBag
             ViewBag.Categories = categories;

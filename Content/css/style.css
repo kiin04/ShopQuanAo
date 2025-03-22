@@ -106,7 +106,6 @@ p {
 
 /* --- PHẦN SẢN PHẨM NỔI BẬT --- */
 .featured-products {
-    margin: 50px 0;
     text-align: center;
 }
 
@@ -134,6 +133,7 @@ p {
     background: #fff;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     text-align: center;
+    margin-bottom: 20px;
 }
 
     /* Ảnh sản phẩm */
@@ -191,18 +191,117 @@ p {
     }
 }
 
-.advertisement {
-    margin: 30px auto;
-    max-width: 90%;
-    text-align: center;
-    background: none; /* Không cần nền */
-    padding: 0;
-    border-radius: 10px;
+.banner-container {
+    width: 100%;
+    height: 450px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.ad-banner {
+.banner-slide {
     width: 100%;
-    max-height: 500px; /* Điều chỉnh chiều cao */
-    object-fit: cover;
-    border-radius: 10px;
+    height: 100%;
+    position: absolute;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
 }
+
+    .banner-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 15px;
+    }
+
+    .banner-slide.active {
+        opacity: 1;
+    }
+
+
+
+.word-slider {
+    position: relative; /* Quan trọng: Để các nút điều hướng bám theo */
+    width: 100%;
+    max-width: 1000px;
+    overflow: hidden;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Đảm bảo nội dung căn giữa */
+}
+
+.word-container {
+    display: flex;
+    width: 400%;
+    transition: transform 0.5s ease-in-out;
+}
+
+.word-slide {
+    flex: 0 0 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 15px;
+    box-sizing: border-box;
+    background: linear-gradient(45deg, #c6e2ff, #6699ff); /* Màu nền nổi bật */
+    border-radius: 10px; /* Bo góc mềm mại */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Thêm hiệu ứng đổ bóng */
+    color: white;
+    font-weight: bold;
+    transition: background 0.5s ease-in-out;
+}
+
+    .word-slide img {
+        width: 35px;
+        height: auto;
+    }
+
+    .word-slide a {
+        font-size: 20px;
+        font-weight: bold;
+        color: white;
+        text-decoration: none;
+    }
+
+/* Nút điều hướng */
+.prev-btn, .next-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%); /* Căn giữa theo chiều dọc */
+    font-size: 30px;
+    background: none;
+    border: none;
+    color: #333;
+    padding: 10px; /* Đảm bảo vùng bấm rộng hơn */
+    cursor: pointer;
+    transition: color 0.3s, transform 0.2s ease-in-out;
+    z-index: 10;
+}
+
+    /* Hover: Hiệu ứng mượt mà hơn */
+    .prev-btn:hover, .next-btn:hover {
+        color: #ff6600;
+        transform: translateY(-50%) scale(1.2);
+    }
+
+.prev-btn {
+    left: 0px; /* Dịch ra ngoài một chút */
+}
+
+.next-btn {
+    right: 0px; /* Dịch ra ngoài một chút */
+}
+
+
+
+
+
+
+
+
+
+
+

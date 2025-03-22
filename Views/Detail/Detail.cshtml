@@ -79,33 +79,34 @@
             {
                 foreach (var comment in (List<WebMusic.Models.Comment>)ViewBag.Comments)
                 {
-                    <div class="comment">
-                        <p><strong>@comment.Customer.FullName:</strong> @comment.CommentText</p>
-                        <small>@comment.CreatedAt?.ToString("dd/MM/yyyy HH:mm")</small>
+        <div class="comment">
+            <p><strong>@comment.Customer.FullName:</strong> @comment.CommentText</p>
+            <small>@(comment.CreatedAt.HasValue ? comment.CreatedAt.Value.ToString("dd/MM/yyyy HH:mm") : "Không xác định")</small>
 
-                        @if (Session["Email"] != null)
-                        {
-                            <button class="reply-btn" onclick="showReplyForm(@comment.CommentID)">Trả lời</button>
 
-                            <div id="replyForm-@comment.CommentID" class="reply-form" style="display: none;">
-                                <textarea id="replyText-@comment.CommentID" placeholder="Viết trả lời..."></textarea>
-                                <button onclick="submitReply(@comment.CommentID)">Gửi</button>
-                            </div>
-                        }
+            @if (Session["Email"] != null)
+            {
+                <button class="reply-btn" onclick="showReplyForm(@comment.CommentID)">Trả lời</button>
 
-                        @if (comment.Comments1 != null && comment.Comments1.Any())
-                        {
-                            <div class="replies">
-                                @foreach (var reply in comment.Comments1)
-                                {
-                                    <div class="reply">
-                                        <p><strong>@reply.Customer.FullName:</strong> @reply.CommentText</p>
-                                        <small>@reply.CreatedAt?.ToString("dd/MM/yyyy HH:mm")</small>
-                                    </div>
-                                }
-                            </div>
-                        }
-                    </div>
+                <div id="replyForm-@comment.CommentID" class="reply-form" style="display: none;">
+                    <textarea id="replyText-@comment.CommentID" placeholder="Viết trả lời..."></textarea>
+                    <button onclick="submitReply(@comment.CommentID)">Gửi</button>
+                </div>
+            }
+
+            @if (comment.Comments1 != null && comment.Comments1.Any())
+            {
+                <div class="replies">
+                    @foreach (var reply in comment.Comments1)
+                    {
+                        <div class="reply">
+                            <p><strong>@reply.Customer.FullName:</strong> @reply.CommentText</p>
+                            <small>@reply.CreatedAt?.ToString("dd/MM/yyyy HH:mm")</small>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
                 }
             }
         </div>

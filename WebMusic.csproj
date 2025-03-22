@@ -282,13 +282,17 @@
     <Content Include="Content\images\bannernam1.jpg" />
     <Content Include="Content\images\bannernam2.jpg" />
     <Content Include="Content\images\cart2.png" />
+    <Content Include="Content\images\gift.png" />
+    <Content Include="Content\images\lightning.png" />
     <Content Include="Content\images\more.png" />
+    <Content Include="Content\images\motorbike.png" />
     <Content Include="Content\images\pants.png" />
     <Content Include="Content\images\profile1.png" />
     <Content Include="Content\images\refresh.png" />
     <Content Include="Content\images\shirt.png" />
     <Content Include="Content\images\shoes.png" />
     <Content Include="Content\images\skirt.png" />
+    <Content Include="Content\images\star.png" />
     <Content Include="Content\js\comment.js" />
     <Content Include="Content\js\previewimage.js" />
     <Content Include="Content\js\successmessage.js" />

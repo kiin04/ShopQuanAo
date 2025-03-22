@@ -8,7 +8,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Trang chủ | 24hClothesShop</title>
-    <link rel="stylesheet" href="@Url.Content("~/Content/css/style.css")" />
+        <link rel="stylesheet" href="@Url.Content("~/Content/css/style.css")" />
 </head>
 <body>
 
@@ -17,12 +17,47 @@
     </header>
 
     <main class="container mt-4">
-        <h1 class="text-center">Chào mừng bạn đến với 24hClothesShop</h1>
+        <h1 class="text-center">Chào mừng đến với 24hClothesShop</h1>
         <p class="text-center">Khám phá hàng ngàn sản phẩm bạn cần.</p>
         <div class="text-center">
             <a href="@Url.Action("DanhMuc", "DanhMuc")" class="btn btn-success">Bắt đầu mua sắm</a>
         </div>
     </main>
+
+    <div class="banner-container">
+        <div class="banner-slide">
+            <img src="~/Content/images/bannernam.jpg" alt="Banner 1">
+        </div>
+        <div class="banner-slide">
+            <img src="~/Content/images/bannernam1.jpg" alt="Banner 2">
+        </div>
+        <div class="banner-slide">
+            <img src="~/Content/images/bannernam2.jpg" alt="Banner 3">
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let slides = document.querySelectorAll(".banner-slide");
+            let currentIndex = 0;
+
+            // Đảm bảo banner đầu tiên hiển thị ngay khi tải trang
+            slides[currentIndex].classList.add("active");
+
+            function showNextSlide() {
+                slides[currentIndex].classList.remove("active");
+                currentIndex = (currentIndex + 1) % slides.length;
+                slides[currentIndex].classList.add("active");
+            }
+
+            // Chuyển ảnh mỗi 5 giây
+            setInterval(showNextSlide, 5000);
+        });
+    </script>
+
+
+
 
 
     <div class="product-categories">
@@ -69,11 +104,71 @@
         }
     </div>
 
+    <div class="word-slider">
+        <button class="prev-btn">❮</button>
+        <div class="word-container">
+            <div class="word-slide">
+                <img src="~/Content/images/motorbike.png" alt="Word1"><a>Miễn phí vận chuyển</a>
+            </div>
+            <div class="word-slide">
+                <img src="~/Content/images/gift.png" alt="Word2"><a>Quà tặng hấp dẫn</a>
+            </div>
+            <div class="word-slide">
+                <img src="~/Content/images/star.png" alt="Word3"><a>Hàng chính hãng, đảm bảo chất lượng</a>
+            </div>
+            <div class="word-slide">
+                <img src="~/Content/images/lightning.png" alt="Word4"><a>Mua ngay kẻo lỡ</a>
+            </div>
+        </div>
+        <button class="next-btn">❯</button>
+    </div>
 
 
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let currentIndex = 0;
+            const slides = document.querySelectorAll(".word-slide");
+            const totalSlides = slides.length;
+            const sliderContainer = document.querySelector(".word-container");
+            let autoSlide;
+
+            function updateSlide() {
+                sliderContainer.style.transition = "transform 0.5s ease-in-out";
+                sliderContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+            }
+
+            function nextSlide() {
+                currentIndex = (currentIndex + 1) % totalSlides;
+                updateSlide();
+            }
+
+            function prevSlide() {
+                currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                updateSlide();
+            }
+
+            function resetAutoSlide() {
+                clearInterval(autoSlide);
+                autoSlide = setInterval(nextSlide, 5000);
+            }
+
+            document.querySelector(".next-btn").addEventListener("click", function () {
+                nextSlide();
+                resetAutoSlide();
+            });
+
+            document.querySelector(".prev-btn").addEventListener("click", function () {
+                prevSlide();
+                resetAutoSlide();
+            });
+
+            // Khởi động auto slide ngay từ đầu
+            autoSlide = setInterval(nextSlide, 5000);
+        });
 
 
+    </script>
 
     <div class="featured-products">
         <h2 class="text-center">Sản phẩm Nổi Bật</h2>
