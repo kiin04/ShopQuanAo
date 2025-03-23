@@ -10,7 +10,13 @@ namespace WebMusic.Controllers
 {
     public class ProfileController : Controller
     {
-        ShopQuanAoEntities db = new ShopQuanAoEntities();
+        private readonly ShopQuanAoEntities _db;
+
+        public ProfileController(ShopQuanAoEntities db)
+        {
+            _db = db;
+        }
+
         // GET: Profile
         public ActionResult ProfileUser()
         {
@@ -24,19 +30,19 @@ namespace WebMusic.Controllers
 
             if (role == "Admin")
             {
-                var admin = db.Users.FirstOrDefault(u => u.UserID == userId);
+                var admin = _db.Users.FirstOrDefault(u => u.UserID == userId);
                 if (admin != null)
                 {
-                    Session["Username"] = admin.Username ?? admin.Email; // Lấy FullName nếu có, nếu không dùng Email
+                    Session["Username"] = admin.Username ?? admin.Email;
                     return View(admin);
                 }
             }
             else
             {
-                var customer = db.Customers.FirstOrDefault(c => c.CustomerID == userId);
+                var customer = _db.Customers.FirstOrDefault(c => c.CustomerID == userId);
                 if (customer != null)
                 {
-                    Session["FullName"] = customer.FullName ?? customer.Email; // Lấy FullName nếu có, nếu không dùng Email
+                    Session["FullName"] = customer.FullName ?? customer.Email;
                     return View(customer);
                 }
             }
@@ -51,7 +57,7 @@ namespace WebMusic.Controllers
             }
 
             int userId = (int)Session["CurrentUserId"];
-            var orders = db.Orders
+            var orders = _db.Orders
                            .Where(o => o.CustomerID == userId)
                            .OrderByDescending(o => o.OrderDate) // Sắp xếp mới nhất lên trên cùng
                            .ToList();
@@ -66,7 +72,7 @@ namespace WebMusic.Controllers
                 return RedirectToAction("Login", "Login");
             }
 
-            var order = db.Orders.Include("OrderDetails.Product")
+            var order = _db.Orders.Include("OrderDetails.Product")
                                  .FirstOrDefault(o => o.OrderID == orderId);
 
             if (order == null)
@@ -90,7 +96,7 @@ namespace WebMusic.Controllers
 
             if (role == "Admin")
             {
-                var admin = db.Users.FirstOrDefault(u => u.UserID == userId);
+                var admin = _db.Users.FirstOrDefault(u => u.UserID == userId);
                 if (admin != null)
                 {
                     var model = new UserViewModel
@@ -105,7 +111,7 @@ namespace WebMusic.Controllers
             }
             else
             {
-                var customer = db.Customers.FirstOrDefault(c => c.CustomerID == userId);
+                var customer = _db.Customers.FirstOrDefault(c => c.CustomerID == userId);
                 if (customer != null)
                 {
                     var model = new UserViewModel
@@ -137,18 +143,18 @@ namespace WebMusic.Controllers
 
             if (role == "Admin")
             {
-                var admin = db.Users.FirstOrDefault(u => u.UserID == userId);
+                var admin = _db.Users.FirstOrDefault(u => u.UserID == userId);
                 if (admin != null)
                 {
                     admin.Username = model.FullName;
                     admin.Email = model.Email;
-                    db.SaveChanges();
+                    _db.SaveChanges();
                     Session["Username"] = admin.Username;
                 }
             }
             else
             {
-                var customer = db.Customers.FirstOrDefault(c => c.CustomerID == userId);
+                var customer = _db.Customers.FirstOrDefault(c => c.CustomerID == userId);
                 if (customer != null)
                 {
                     customer.FullName = model.FullName;
@@ -165,7 +171,7 @@ namespace WebMusic.Controllers
                         Session["Avatar"] = customer.Avatar;
                     }
 
-                    db.SaveChanges();
+                    _db.SaveChanges();
                     Session["FullName"] = customer.FullName;
                     Session["Phone"] = customer.Phone;
                     Session["Address"] = customer.Address;

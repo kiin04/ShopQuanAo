@@ -55,6 +55,13 @@ p {
     line-height: 1.5;
 }
 
+/* Price Styling */
+.price {
+    font-size: 16px;
+    color: #d00;
+    font-weight: bold;
+}
+
 /* Button */
 .btn-choose {
     display: inline-block;

@@ -11,7 +11,8 @@ namespace WebMusic.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using WebMusic.Models.Visitor;
+
     public partial class User
     {
         public int UserID { get; set; }
@@ -19,6 +20,13 @@ namespace WebMusic.Models
         public string PasswordHash { get; set; }
         public string Role { get; set; }
         public string Email { get; set; }
+
+
+        public void Accept(ILoginVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+
     }
     public class UserViewModel
     {
@@ -30,4 +38,5 @@ namespace WebMusic.Models
         public string Role { get; set; }
         public string Avatar { get; set; }
     }
+
 }

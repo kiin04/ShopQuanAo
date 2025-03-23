@@ -4,12 +4,26 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebMusic.Models;
+using WebMusic.Models.Bridge;
 
 namespace WebMusic.Controllers
 {
     public class CheckoutController : Controller
     {
-        ShopQuanAoEntities db = new ShopQuanAoEntities();
+        private readonly ShopQuanAoEntities db;
+        private readonly ICustomerService _customerService;
+
+        public CheckoutController()
+        {
+            db = new ShopQuanAoEntities();
+            _customerService = new CustomerService(db);
+        }
+
+        public CheckoutController(ICustomerService customerService)
+        {
+            db = new ShopQuanAoEntities();
+            _customerService = customerService;
+        }
         // GET: Checkout
         public ActionResult ThanhToan()
         {
@@ -18,17 +32,8 @@ namespace WebMusic.Controllers
             {
                 return RedirectToAction("DanhMuc", "DanhMuc");
             }
-            // Kiểm tra nếu người dùng đã đăng nhập
-            var cus = Session["Customer"] as Customer; // Giả sử có lưu user trong session
-            if (cus == null) // Nếu Session không có, lấy từ database
-            {
-                int? customerId = Session["CustomerID"] as int?;
-                if (customerId != null)
-                {
-                    cus = db.Customers.Find(customerId);
-                    Session["Customer"] = cus; // Lưu lại session để lần sau không cần truy vấn
-                }
-            }
+
+            var cus = _customerService.GetCustomerFromSession(Session);
 
             if (cus != null)
             {
@@ -37,6 +42,7 @@ namespace WebMusic.Controllers
                 ViewBag.Address = cus.Address;
                 ViewBag.PhoneNumber = cus.Phone;
             }
+
             ViewBag.CartItems = cart;
             ViewBag.TotalAmount = cart.Sum(item => item.Quantity * item.Product.Price);
             return View();

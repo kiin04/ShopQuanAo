@@ -7,6 +7,7 @@ namespace WebMusic.Models
 {
     public sealed class DatabaseContextSingleton
     {
+        //AdminController Category
         private static readonly Lazy<ShopQuanAoEntities> _instance =
             new Lazy<ShopQuanAoEntities>(() => new ShopQuanAoEntities());
 

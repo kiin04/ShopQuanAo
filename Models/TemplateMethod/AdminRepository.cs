@@ -7,6 +7,8 @@ namespace WebMusic.Models.TemplateMethod
 {
     public class AdminRepository : BaseUserRepository<User>
     {
+        //AdminController ManagerUser (Add,Update,Delete)
+
         public override List<UserViewModel> GetAllUsers()
         {
             return _db.Users.Select(u => new UserViewModel

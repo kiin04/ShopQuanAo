@@ -11,7 +11,8 @@ namespace WebMusic.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using WebMusic.Models.Visitor;
+
     public partial class Customer
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -37,5 +38,11 @@ namespace WebMusic.Models
         public virtual ICollection<Comment> Comments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Orders { get; set; }
+
+
+        public void Accept(ILoginVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebMusic.Models;
+using WebMusic.Models.State;
 
 namespace WebMusic.Controllers
 {
@@ -13,22 +14,18 @@ namespace WebMusic.Controllers
         // GET: Search
         public ActionResult Search(string keyword)
         {
-            var products = db.Products
-                .Where(p => p.ProductName.Contains(keyword) || p.Description.Contains(keyword))
-                .ToList();
+            var searchState = new SearchState(db);
+            searchState.SearchProducts(keyword);
 
-            return View(products);
+            ViewBag.Keyword = keyword;
+            return View(searchState.Products);
         }
 
         public JsonResult GetSuggestions(string keyword)
         {
-            var suggestions = db.Products
-                .Where(p => p.ProductName.Contains(keyword))
-                .Select(p => new { p.ProductID, p.ProductName, p.ImageURL })
-                .Take(6) // Giới hạn 5 kết quả
-                .ToList();
-
-            return Json(suggestions, JsonRequestBehavior.AllowGet);
+            var searchState = new SearchState(db);
+            searchState.GetSuggestions(keyword);
+            return Json(searchState.Suggestions, JsonRequestBehavior.AllowGet);
         }
     }
 }

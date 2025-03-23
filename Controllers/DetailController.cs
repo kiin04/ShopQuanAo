@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebMusic.Models;
+using WebMusic.Models.Proxy;
 
 namespace WebMusic.Controllers
 {
@@ -11,20 +12,21 @@ namespace WebMusic.Controllers
     {
         ShopQuanAoEntities db = new ShopQuanAoEntities();
         // GET: Detail
+        private readonly ProductProxy _productProxy;
+        public DetailController()
+        {
+            _productProxy = new ProductProxy();
+        }
         public ActionResult Detail(int id)
         {
-            var product = db.Products.FirstOrDefault(p => p.ProductID == id);
+            var product = _productProxy.GetProduct(id);
             if (product == null)
             {
                 return HttpNotFound();
             }
-            // Lấy danh sách bình luận
-            var comments = db.Comments
-                             .Where(c => c.ProductID == id)
-                             .OrderByDescending(c => c.CreatedAt)
-                             .ToList();
 
-            // Truyền dữ liệu bằng ViewBag
+            var comments = _productProxy.GetComments(id);
+
             ViewBag.ProductID = product.ProductID;
             ViewBag.ProductName = product.ProductName;
             ViewBag.CategoryName = product.Category?.CategoryName;

@@ -9,6 +9,8 @@ namespace WebMusic.Models
     {
         public override List<UserViewModel> GetAllUsers()
         {
+            //AdminController ManagerUser (Add,Update,Delete)
+
             return _db.Customers.Select(c => new UserViewModel
             {
                 ID = c.CustomerID,

@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
 using WebMusic.Models;
+using WebMusic.Models.Visitor;
 
 namespace WebMusic.Controllers
 {
@@ -17,42 +18,35 @@ namespace WebMusic.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public ActionResult Login(string Email, string Password)
         {
-            // Kiểm tra trong bảng Customer
+            var visitor = new LoginHandler(Session);
+
             var customer = database.Customers.FirstOrDefault(c => c.Email == Email && c.PasswordHash == Password);
             if (customer != null)
             {
-                Session["Customer"] = customer; // Lưu đối tượng Customer vào Session
-                Session["Avatar"] = customer.Avatar ?? "/Content/images/profile1.png";
-                Session["Email"] = customer.Email;
-                Session["CurrentUserId"] = customer.CustomerID;
-                Session["FullName"] = customer.FullName;
-                Session["Role"] = "Customer"; // Gán vai trò khách hàng
-                Session["Phone"] = customer.Phone;
-                Session["Address"] = customer.Address;
+                customer.Accept(visitor);
                 return RedirectToAction("Home", "Home");
             }
 
-            // Kiểm tra trong bảng User (Admin)
             var admin = database.Users.FirstOrDefault(u => u.Email == Email && u.PasswordHash == Password);
             if (admin != null)
             {
-                Session["Email"] = admin.Email;
-                Session["CurrentUserId"] = admin.UserID;
-                Session["Username"] = admin.Username;
-                Session["Role"] = "Admin"; // Gán vai trò admin
-                return RedirectToAction("Home", "Home"); // Chuyển hướng đến trang admin
+                admin.Accept(visitor);
+                return RedirectToAction("Home", "Home");
             }
 
             ViewBag.error = "Tên đăng nhập hoặc mật khẩu không đúng";
             return View();
         }
+
         public ActionResult Register()
         {
             return View();
         }
+
         [HttpPost]
         public ActionResult Register(Customer customer, HttpPostedFileBase Avatar)
         {
@@ -67,11 +61,15 @@ namespace WebMusic.Controllers
                 ModelState.AddModelError("Email", "Email đã tồn tại.");
             }
 
+            if (string.IsNullOrEmpty(customer.PasswordHash) || customer.PasswordHash.Length < 6)
+            {
+                ModelState.AddModelError("PasswordHash", "Mật khẩu phải có ít nhất 6 ký tự.");
+            }
+
             if (ModelState.IsValid)
             {
-                string avatarPath = "/Content/images/profile1.png"; // Ảnh mặc định nếu không có avatar
+                string avatarPath = "/Content/images/7.jpg";
 
-                // Xử lý upload avatar
                 if (Avatar != null && Avatar.ContentLength > 0)
                 {
                     string fileName = Guid.NewGuid().ToString() + System.IO.Path.GetExtension(Avatar.FileName);
@@ -81,15 +79,14 @@ namespace WebMusic.Controllers
                     avatarPath = "/Content/avatars/" + fileName;
                 }
 
-                // Lưu user vào database
                 var newCus = new Customer
                 {
                     Phone = customer.Phone,
                     Address = customer.Address,
                     FullName = customer.FullName,
                     Email = customer.Email,
-                    PasswordHash = customer.PasswordHash, // Nên hash mật khẩu trước khi lưu
-                    Avatar = avatarPath, // Lưu đường dẫn avatar vào DB
+                    PasswordHash = customer.PasswordHash,
+                    Avatar = avatarPath,
                     CreatedAt = DateTime.Now,
                 };
 
@@ -98,16 +95,91 @@ namespace WebMusic.Controllers
                 return RedirectToAction("Login");
             }
 
-            // Lưu danh sách lỗi vào ViewBag
             ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors)
                                               .Select(e => e.ErrorMessage)
                                               .ToList();
             return View();
         }
-        public ActionResult Logout(User user)
+
+        public ActionResult Logout()
         {
             Session.Clear();
             return RedirectToAction("Home", "Home");
         }
+
+        public ActionResult ForgetPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ForgetPassword(string Email)
+        {
+            var customer = database.Customers.FirstOrDefault(c => c.Email == Email);
+            var admin = database.Users.FirstOrDefault(u => u.Email == Email);
+            object user = customer ?? (object)admin;
+
+            if (user == null)
+            {
+                ViewBag.Error = "Email không tồn tại.";
+                return View();
+            }
+
+            // Lưu Email vào Session để dùng trong bước đặt lại mật khẩu
+            Session["ResetEmail"] = Email;
+            return RedirectToAction("ResetPassword");
+        }
+
+        public ActionResult ResetPassword()
+        {
+            if (Session["ResetEmail"] == null)
+            {
+                return RedirectToAction("ForgetPassword");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ResetPassword(string NewPassword, string ConfirmPassword)
+        {
+            string email = Session["ResetEmail"]?.ToString();
+            if (email == null) return RedirectToAction("ForgetPassword");
+
+            // Kiểm tra xem mật khẩu nhập lại có khớp không
+            if (NewPassword != ConfirmPassword)
+            {
+                ViewBag.Error = "Mật khẩu xác nhận không khớp.";
+                return View();
+            }
+
+            if (string.IsNullOrEmpty(NewPassword) || NewPassword.Length < 6)
+            {
+                ViewBag.Error = "Mật khẩu phải có ít nhất 6 ký tự.";
+                return View();
+            }
+
+            var customer = database.Customers.FirstOrDefault(c => c.Email == email);
+            var admin = database.Users.FirstOrDefault(u => u.Email == email);
+
+            if (customer != null)
+            {
+                customer.PasswordHash = NewPassword; // Lưu trực tiếp mật khẩu không mã hóa
+                database.SaveChanges();
+                Session.Remove("ResetEmail");
+                return RedirectToAction("Login");
+            }
+
+            if (admin != null)
+            {
+                admin.PasswordHash = NewPassword; // Lưu trực tiếp mật khẩu không mã hóa
+                database.SaveChanges();
+                Session.Remove("ResetEmail");
+                return RedirectToAction("Login");
+            }
+
+            ViewBag.Error = "Có lỗi xảy ra. Vui lòng thử lại.";
+            return View();
+        }
+
     }
 }

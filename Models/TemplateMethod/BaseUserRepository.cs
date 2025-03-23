@@ -7,6 +7,8 @@ namespace WebMusic.Models
 {
     public abstract class BaseUserRepository<T> where T : class
     {
+        //AdminController ManagerUser (Add,Update,Delete)
+
         protected readonly ShopQuanAoEntities _db;
 
         protected BaseUserRepository()

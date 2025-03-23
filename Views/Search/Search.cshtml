@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="~/Content/css/seacrh.css" />
 </head>
 @Html.Partial("_Header")
-<h2>Kết quả tìm kiếm</h2>
+<h2>Kết quả tìm kiếm cho: <span class="search-keyword">@ViewBag.Keyword</span></h2>
 
 @if (Model.Count == 0)
 {
@@ -21,8 +21,7 @@ else
             <div class="product-item">
                 <img src="@Url.Content(product.ImageURL)" alt="@product.ProductName" class="product-image" />
                 <h3>@product.ProductName</h3>
-                <p>Giá: @product.Price.ToString("N0") VNĐ</p>
-                <p>@product.Description</p>
+                <p class="price">Giá: @product.Price.ToString("N0") VNĐ</p>
                 <a href="@Url.Action("Detail", "Detail", new { id = product.ProductID })" class="btn-choose">Xem chi tiết</a>
             </div>
         }
