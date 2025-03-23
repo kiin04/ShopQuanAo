@@ -5,19 +5,30 @@ using System.Web;
 using System.Web.Mvc;
 using WebMusic.Models;
 using PagedList;
+using WebMusic.Repositories;
 
 namespace WebMusic.Controllers
 {
     public class DanhMucController : Controller
     {
+
+        private readonly IUnitOfWork _unitOfWork;
+
+        public DanhMucController(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
+
         ShopQuanAoEntities db = new ShopQuanAoEntities();
         // GET: DanhMuc
         public ActionResult DanhMuc(int? categoryId, string sortOrder, int? page)
         {
             int pageSize = 15; // Số sản phẩm mỗi trang
             int pageNumber = (page ?? 1); // Trang mặc định
+            //unit
+            var products = _unitOfWork.ProductRepository.GetAll().AsQueryable();
 
-            var products = db.Products.AsQueryable();
+
 
             // Lọc theo danh mục
             if (categoryId.HasValue && categoryId != 0)
@@ -43,7 +54,8 @@ namespace WebMusic.Controllers
                     break;
             }
 
-            ViewBag.Categories = db.Categories.ToList();
+            // Sử dụng CategoryRepository từ UnitOfWork để lấy danh sách categories
+            ViewBag.Categories = _unitOfWork.CategoryRepository.GetAll().ToList();
 
             // Áp dụng phân trang
             return View(products.ToPagedList(pageNumber, pageSize));
