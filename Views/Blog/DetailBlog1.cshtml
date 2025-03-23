@@ -1,0 +1,37 @@
+﻿
+@{
+    Layout = null;
+}
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DetailBlog1</title>
+    <link rel="stylesheet" href="@Url.Content("~/Content/css/blogdetail.css")" />
+</head>
+
+@Html.Partial("_Header")
+
+<div class="blog-detail-container">
+    <div class="blog-detail">
+        <h1 class="blog-detail-title">Xu hướng thời trang hè 2025</h1>
+        <img src="@Url.Content("~/Content/images/blog.png")" alt="Xu hướng thời trang hè 2025" class="blog-detail-image">
+        <p class="blog-detail-description">Những bộ sưu tập mới nhất đang làm mưa làm gió trong mùa hè này. Các nhà thiết kế đã mang đến một làn gió mới với các xu hướng nổi bật như phong cách thể thao, bohemian, và sự kết hợp giữa các màu sắc tươi sáng. Những bộ trang phục mùa hè 2025 không chỉ dễ mặc mà còn giúp bạn nổi bật giữa đám đông.</p>
+
+        <h2 class="blog-detail-subtitle">Xu hướng chủ đạo năm nay</h2>
+        <p class="blog-detail-content">Một trong những xu hướng nổi bật trong mùa hè năm 2025 là sự quay trở lại của phong cách thể thao. Áo thun oversized kết hợp cùng quần shorts năng động được nhiều người ưa chuộng. Ngoài ra, các họa tiết hoa lá, dệt kim và chất liệu tự nhiên cũng được các nhà thiết kế sử dụng rộng rãi, mang lại sự thoải mái và tự do cho người mặc.</p>
+        <img src="@Url.Content("~/Content/images/blog1/1.jpg")" alt="Xu hướng chủ đạo năm nay" class="blog-detail-image center-image" style="width: auto;">
+
+        <h2 class="blog-detail-subtitle">Màu sắc và chất liệu</h2>
+        <p class="blog-detail-content">Mùa hè 2025 chứng kiến sự lên ngôi của những gam màu sáng như vàng, cam, và xanh dương. Bên cạnh đó, các chất liệu như vải lanh, cotton, và denim nhẹ nhàng sẽ là lựa chọn ưu tiên, giúp người mặc cảm thấy thoải mái trong những ngày hè oi ả. Những bộ trang phục này không chỉ đẹp mắt mà còn thân thiện với môi trường, thể hiện sự kết hợp hoàn hảo giữa thời trang và sự bền vững.</p>
+        <img src="@Url.Content("~/Content/images/blog1/2.jpg")" alt="Màu sắc và chất liệu" class="blog-detail-image center-image" style="width: auto;">
+
+        <h2 class="blog-detail-subtitle">Cách kết hợp trang phục</h2>
+        <p class="blog-detail-content">Để tạo nên một set đồ thời trang cho mùa hè, bạn có thể kết hợp áo phông trắng basic với quần short cạp cao hoặc chân váy midi nhẹ nhàng. Đừng quên lựa chọn phụ kiện như mũ rộng vành, kính mát, hoặc túi xách mini để hoàn thiện phong cách. Đối với những buổi dạo phố hay đi biển, hãy thử các bộ bikini màu sắc tươi sáng với áo khoác mỏng và sandal thoải mái.</p>
+        <img src="@Url.Content("~/Content/images/blog1/3.jpg")" alt="Cách kết hợp trang phục" class="blog-detail-image center-image" style="width: auto;">
+        <img src="@Url.Content("~/Content/images/blog1/4.jpg")" alt="Cách kết hợp trang phục" class="blog-detail-image center-image" style="width: auto;">
+
+        <a href="@Url.Action("Blog", "Blog")" class="blog-btn">Quay lại</a>
+    </div>
+</div>
+
+@Html.Partial("_Footer")

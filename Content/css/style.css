@@ -343,7 +343,7 @@ p {
 }
 
 .news-item {
-    width: 320px;
+    width: calc(20% - 20px);
     background: #fff;
     border-radius: 10px;
     overflow: hidden;

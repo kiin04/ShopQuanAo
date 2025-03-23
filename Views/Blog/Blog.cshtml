@@ -1,0 +1,58 @@
+﻿    @{
+        Layout = null;
+    }
+
+    <!DOCTYPE html>
+    <html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Blog</title>
+        <link rel="stylesheet" href="@Url.Content("~/Content/css/blog.css")" />
+    </head>
+    <body>
+        @Html.Partial("_Header")
+        <div class="blog-container">
+            <h1 class="blog-title text-center">Tin tức</h1>
+            <div class="blog-list">
+
+                <div class="blog-item">
+                    <img src="@Url.Content("~/Content/images/blog.png")" alt="Xu hướng thời trang hè 2025" class="blog-image">
+                    <h3 class="blog-item-title">Xu hướng thời trang hè 2025</h3>
+                    <p class="blog-item-description">Những bộ sưu tập mới nhất đang làm mưa làm gió trong mùa hè này.</p>
+                    <a href="@Url.Action("DetailBlog1", "Blog")" class="blog-btn">Đọc tiếp</a>
+                </div>
+
+                <div class="blog-item">
+                    <img src="@Url.Content("~/Content/images/blog1.jpg")" alt="Mẹo phối đồ công sở" class="blog-image">
+                    <h3 class="blog-item-title">Mẹo phối đồ công sở</h3>
+                    <p class="blog-item-description">Gợi ý cách mix đồ thanh lịch, chuyên nghiệp cho dân văn phòng.</p>
+                    <a href="@Url.Action("DetailBlog2", "Blog")" class="blog-btn">Đọc tiếp</a>
+                </div>
+
+                <div class="blog-item">
+                    <img src="@Url.Content("~/Content/images/blog2.png")" alt="Top 5 đôi giày hot nhất 2025" class="blog-image">
+                    <h3 class="blog-item-title">Top 5 đôi giày hot nhất 2025</h3>
+                    <p class="blog-item-description">Những đôi sneaker không thể bỏ lỡ trong năm nay.</p>
+                    <a href="@Url.Action("DetailBlog3", "Blog")" class="blog-btn">Đọc tiếp</a>
+                </div>
+
+                <div class="blog-item">
+                    <img src="@Url.Content("~/Content/images/blog3.jpg")" alt="Thời trang công sở 2025" class="blog-image">
+                    <h3 class="blog-item-title">Thời trang công sở 2025</h3>
+                    <p class="blog-item-description">Khám phá những xu hướng thời trang công sở ấn tượng cho năm nay.</p>
+                    <a href="@Url.Action("DetailBlog1", "Blog")" class="blog-btn">Đọc tiếp</a>
+                </div>
+
+                <div class="blog-item">
+                    <img src="@Url.Content("~/Content/images/blog4.jpg")" alt="Phong cách thời trang đường phố năm 2025" class="blog-image">
+                    <h3 class="blog-item-title">Phong cách thời trang đường phố năm 2025</h3>
+                    <p class="blog-item-description">Khám phá những phong cách thời trang đường phố đang thịnh hành và được yêu thích nhất năm nay.</p>
+                    <a href="@Url.Action("DetailBlog5", "Blog")" class="blog-btn">Đọc tiếp</a>
+                </div>
+
+            </div>
+        </div>
+    </body>
+    </html>
+    @Html.Partial("_Footer")

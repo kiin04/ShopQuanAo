@@ -29,6 +29,11 @@ namespace WebMusic
                 url: "Checkout/ThanhToan",
                 defaults: new { controller = "Checkout", action = "ThanhToan" }
             );
+            routes.MapRoute(
+                name: "Blog",
+                url: "Blog",
+                defaults: new { controller = "Blog", action = "Blog" }
+            );
         }
     }
 

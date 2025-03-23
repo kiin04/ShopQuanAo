@@ -1,0 +1,32 @@
+﻿@{
+    Layout = null;
+}
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Mẹo phối đồ thanh lịch và chuyên nghiệp</title>
+    <link rel="stylesheet" href="@Url.Content("~/Content/css/blogdetail.css")" />
+</head>
+@Html.Partial("_Header")
+<div class="blog-detail-container">
+    <div class="blog-detail">
+        <h1 class="blog-detail-title">Mẹo phối đồ thanh lịch và chuyên nghiệp</h1>
+        <img src="@Url.Content("~/Content/images/blog1.jpg")" alt="Mẹo phối đồ" class="blog-detail-image">
+        <p class="blog-detail-description">Phối đồ đúng cách là một nghệ thuật, đặc biệt trong môi trường công sở và các dịp quan trọng. Dưới đây là những gợi ý giúp bạn có thể tạo ra những bộ trang phục thanh lịch và chuyên nghiệp, đồng thời vẫn giữ được sự thoải mái trong công việc hàng ngày.</p>
+
+        <h2 class="blog-detail-subtitle">Lựa chọn trang phục cơ bản</h2>
+        <p class="blog-detail-content">Khi bắt đầu phối đồ, hãy luôn lựa chọn những món đồ cơ bản như áo sơ mi trắng, chân váy pencil hoặc quần âu. Những món đồ này rất dễ kết hợp và tạo được vẻ ngoài thanh lịch, phù hợp cho môi trường làm việc. Ngoài ra, bạn có thể mix chúng với những phụ kiện đơn giản như đồng hồ hoặc vòng cổ để làm điểm nhấn cho bộ trang phục của mình.</p>
+
+        <h2 class="blog-detail-subtitle">Chọn màu sắc phù hợp</h2>
+        <p class="blog-detail-content">Màu sắc đóng vai trò quan trọng trong việc tạo ra một bộ trang phục chuyên nghiệp. Màu sắc trung tính như đen, trắng, xám, và navy luôn là sự lựa chọn an toàn và thanh lịch. Bạn có thể thêm một chút màu sắc nhẹ nhàng như pastel hoặc các màu đất để tạo sự tươi mới mà không làm mất đi vẻ chuyên nghiệp.</p>
+
+        <h2 class="blog-detail-subtitle">Phụ kiện không thể thiếu</h2>
+        <p class="blog-detail-content">Phụ kiện là một phần quan trọng giúp nâng tầm trang phục của bạn. Hãy lựa chọn những món phụ kiện tinh tế như túi xách da, giày cao gót đơn giản, và các trang sức nhỏ gọn. Một chiếc túi xách phù hợp có thể giúp bạn trông gọn gàng và sang trọng hơn, đồng thời cũng rất tiện lợi trong công việc.</p>
+
+        <h2 class="blog-detail-subtitle">Kết hợp phụ kiện và trang phục</h2>
+        <p class="blog-detail-content">Khi phối đồ, hãy nhớ rằng sự hài hòa giữa trang phục và phụ kiện là rất quan trọng. Hãy tránh sử dụng quá nhiều phụ kiện với những bộ đồ đơn giản, và ngược lại, một bộ đồ cầu kỳ có thể cần những phụ kiện tối giản để không bị rối mắt.</p>
+
+        <a href="@Url.Action("Blog", "Blog")" class="blog-btn">Quay lại</a>
+    </div>
+</div>
+@Html.Partial("_Footer")
