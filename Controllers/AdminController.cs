@@ -353,6 +353,51 @@ namespace WebMusic.Controllers
             return View(customer);
         }
 
+        public ActionResult EditAdmin(int id)
+        {
+            var admin = _adminRepo.GetById(id);
+            if (admin == null)
+            {
+                return HttpNotFound();
+            }
+            return View(admin);
+        }
+
+        [HttpPost]
+        public ActionResult EditAdmin(int id, User admin, HttpPostedFileBase avatarFile)
+        {
+            if (ModelState.IsValid)
+            {
+                if (avatarFile != null && avatarFile.ContentLength > 0)
+                {
+                    string uploadDir = Server.MapPath("~/Content/avatars/");
+                    if (!Directory.Exists(uploadDir))
+                    {
+                        Directory.CreateDirectory(uploadDir);
+                    }
+
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(avatarFile.FileName);
+                    string filePath = Path.Combine(uploadDir, fileName);
+                    avatarFile.SaveAs(filePath);
+
+                    admin.Avatar = "/Content/avatars/" + fileName;
+                }
+
+                if (_adminRepo.Update(id, admin))
+                {
+                    TempData["SuccessMessage"] = "Thông tin Admin đã được cập nhật!";
+                    return RedirectToAction("ManagerUser");
+                }
+                else
+                {
+                    ViewBag.Error = "Email đã được sử dụng bởi Admin khác.";
+                }
+            }
+
+            return View(admin);
+        }
+
+
         [HttpPost]
         public ActionResult DeleteCustomer(int id)
         {

@@ -9,6 +9,8 @@ namespace WebMusic.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
+        //DanhMucController
+
         private readonly ShopQuanAoEntities _context;
         private IProductRepository _productRepository;
         private ICategoryRepository _categoryRepository;

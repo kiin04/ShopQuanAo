@@ -47,7 +47,6 @@ namespace WebMusic
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
         }
-
         public static void RegisterComponents()
         {
             var container = new UnityContainer();
@@ -70,6 +69,4 @@ namespace WebMusic
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
     }
-
-
 }

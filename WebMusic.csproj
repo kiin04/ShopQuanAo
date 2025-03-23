@@ -300,11 +300,15 @@
     <Content Include="Content\images\bannernam.jpg" />
     <Content Include="Content\images\bannernam1.jpg" />
     <Content Include="Content\images\bannernam2.jpg" />
+    <Content Include="Content\images\blog.png" />
+    <Content Include="Content\images\blog1.jpg" />
+    <Content Include="Content\images\blog2.png" />
     <Content Include="Content\images\cart2.png" />
     <Content Include="Content\images\gift.png" />
     <Content Include="Content\images\lightning.png" />
     <Content Include="Content\images\more.png" />
     <Content Include="Content\images\motorbike.png" />
+    <Content Include="Content\images\not-found.png" />
     <Content Include="Content\images\pants.png" />
     <Content Include="Content\images\profile1.png" />
     <Content Include="Content\images\refresh.png" />

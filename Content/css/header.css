@@ -49,10 +49,6 @@
     list-style-type: none; /* Remove bullet points */
 }
 
-.nav-item {
-    margin-right: 10px;
-}
-
 .navbar-nav .nav-link {
     font-weight: 600;
     color: #fff;

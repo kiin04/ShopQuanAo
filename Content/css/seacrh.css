@@ -5,6 +5,12 @@ body {
     margin: 0;
     padding: 0;
     background: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.content {
+    flex: 1;
 }
 
 /* Product List Grid */
@@ -47,6 +53,13 @@ h3 {
     margin: 10px 0;
     color: #222;
     font-weight: 600;
+}
+/* Căn chỉnh tiêu đề kết quả tìm kiếm */
+h2 {
+    margin-left: 30px; /* Điều chỉnh khoảng cách sang phải */
+    font-size: 24px;
+    font-weight: bold;
+    color: #222;
 }
 
 p {
@@ -103,3 +116,53 @@ p {
         padding: 10px 15px;
     }
 }
+/* Khi không có kết quả */
+.no-results {
+    text-align: center;
+    padding: 50px 20px;
+    margin: auto;
+    max-width: 600px;
+}
+
+/* Hình ảnh minh họa */
+.no-results-image {
+    width: 150px;
+    height: auto;
+    margin-bottom: 15px;
+    opacity: 0.8;
+}
+
+/* Tiêu đề */
+.no-results h3 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 10px;
+}
+
+/* Mô tả */
+.no-results p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Nút quay về trang chủ */
+.btn-back-home {
+    display: inline-block;
+    padding: 12px 18px;
+    color: #fff;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.2s;
+    box-shadow: 0 3px 8px rgba(0, 123, 255, 0.3);
+}
+
+    .btn-back-home:hover {
+        background: linear-gradient(135deg, #0056b3, #003d80);
+        transform: scale(1.05);
+    }
+
+

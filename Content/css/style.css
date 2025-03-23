@@ -110,11 +110,23 @@ p {
 }
 
     .featured-products h2 {
-        font-size: 26px;
+        font-size: 28px;
         font-weight: bold;
+        color: #007bff; /* Màu xanh nổi bật */
+        text-align: center;
         margin-bottom: 20px;
-        color: #333;
+        position: relative;
+        display: inline-block;
     }
+        .featured-products h2::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: #007bff;
+            margin: 8px auto 0;
+            border-radius: 2px;
+        }
 
 /* Danh sách sản phẩm */
 .product-list {
@@ -296,6 +308,88 @@ p {
 }
 
 
+
+.news-section {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    text-align: center;
+}
+    .news-section h2 {
+        font-size: 28px;
+        font-weight: bold;
+        color: #007bff; /* Màu xanh nổi bật */
+        text-align: center;
+        margin-bottom: 20px;
+        position: relative;
+        display: inline-block;
+    }
+
+        .news-section h2::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: #007bff;
+            margin: 8px auto 0;
+            border-radius: 2px;
+        }
+
+.news-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.news-item {
+    width: 320px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    text-align: center;
+}
+
+    .news-item:hover {
+        transform: translateY(-5px);
+    }
+
+.news-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.news-item h3 {
+    font-size: 20px;
+    margin: 10px 0;
+    color: #333;
+}
+
+.news-item p {
+    font-size: 14px;
+    color: #666;
+    padding: 0 15px;
+}
+
+.news-item .btn {
+    display: inline-block;
+    margin: 10px auto;
+    padding: 8px 15px;
+    border: 2px solid #007bff;
+    color: #007bff;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+    .news-item .btn:hover {
+        background: #007bff;
+        color: #fff;
+    }
 
 
 

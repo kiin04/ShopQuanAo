@@ -163,6 +163,11 @@ namespace WebMusic.Controllers
 
             if (customer != null)
             {
+                if (customer.PasswordHash == NewPassword) // So sánh trực tiếp (nếu chưa mã hóa)
+                {
+                    ViewBag.Error = "Mật khẩu mới không được trùng với mật khẩu cũ.";
+                    return View();
+                }
                 customer.PasswordHash = NewPassword; // Lưu trực tiếp mật khẩu không mã hóa
                 database.SaveChanges();
                 Session.Remove("ResetEmail");
@@ -171,6 +176,11 @@ namespace WebMusic.Controllers
 
             if (admin != null)
             {
+                if (admin.PasswordHash == NewPassword) // So sánh trực tiếp (nếu chưa mã hóa)
+                {
+                    ViewBag.Error = "Mật khẩu mới không được trùng với mật khẩu cũ.";
+                    return View();
+                }
                 admin.PasswordHash = NewPassword; // Lưu trực tiếp mật khẩu không mã hóa
                 database.SaveChanges();
                 Session.Remove("ResetEmail");

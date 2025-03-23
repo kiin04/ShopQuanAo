@@ -67,7 +67,14 @@
                             <img src="@user.Avatar" width="50" height="50" />
                         </td>
                         <td>
-                            <a href="@Url.Action("EditCustomer", "Admin", new { id = user.ID })" class="btn btn-warning">Sửa</a>
+                            @if (user.Role == "Admin")
+                            {
+                                <a href="@Url.Action("EditAdmin", "Admin", new { id = user.ID })" class="btn btn-warning">Sửa</a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("EditCustomer", "Admin", new { id = user.ID })" class="btn btn-warning">Sửa</a>
+                            }                            
                             <form action="@Url.Action("DeleteCustomer", "Admin")" method="post" style="display:inline;">
                                 <input type="hidden" name="id" value="@user.ID" />
                                 <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này?');">Xóa</button>
