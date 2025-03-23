@@ -55,6 +55,12 @@ namespace WebMusic
             // Đăng ký DbContext
             container.RegisterType<ShopQuanAoEntities>();
 
+            // Đăng ký IUnitOfWork với UnitOfWork
+            container.RegisterType<IUnitOfWork, UnitOfWork>();
+
+            // Đăng ký ShopQuanAoEntities (nếu cần truyền vào UnitOfWork)
+            container.RegisterType<ShopQuanAoEntities>(new PerRequestLifetimeManager());
+
             // Đăng ký Repository
             container.RegisterType<IProductRepository, Repositories.ProductRepository>();
 
