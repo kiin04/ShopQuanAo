@@ -10,7 +10,7 @@
 }
 
 .navbar-brand {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: bold;
     color: #007bff;
     text-decoration: none;
@@ -79,7 +79,7 @@
 }
 
 .search-input {
-    width: 450px; /* Set a fixed width for the search bar */
+    width: 400px; /* Set a fixed width for the search bar */
     padding: 8px;
     font-size: 14px;
     border: 1px solid #ccc;

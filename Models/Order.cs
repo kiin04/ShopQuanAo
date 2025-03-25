@@ -30,4 +30,10 @@ namespace WebMusic.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
+    public class ProfileViewModel
+    {
+        public List<Order> Orders { get; set; }
+        public string Email { get; set; }
+    }
+
 }

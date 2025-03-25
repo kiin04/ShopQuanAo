@@ -11,6 +11,7 @@ using WebMusic.Services;
 using PagedList;
 using PagedList.Mvc;
 using System.Web.UI;
+using WebMusic.Models.BuilderPattern;
 
 namespace WebMusic.Controllers
 {
@@ -369,96 +370,47 @@ namespace WebMusic.Controllers
 
         public ActionResult ManagerOrder(int? page)
         {
-            int pageSize = 10; // Số đơn hàng mỗi trang
-            int pageNumber = (page ?? 1); // Nếu không có tham số, mặc định trang 1
-
-            var orders = _db.Orders
-                           .Include("Customer") // Load thông tin khách hàng
-                           .OrderByDescending(o => o.OrderDate)
-                           .ToPagedList(pageNumber, pageSize);
-
-            return View(orders); // Trả về IPagedList<Order>
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            var orders = _db.Orders.Include("Customer").OrderByDescending(o => o.OrderDate).ToPagedList(pageNumber, pageSize);
+            return View(orders);
         }
 
         public ActionResult OrderDetails(int id)
         {
-            var order = _db.Orders
-                          .Include("OrderDetails.Product") // Load luôn thông tin sản phẩm
-                          .FirstOrDefault(o => o.OrderID == id);
-
-            if (order == null)
-            {
-                return HttpNotFound(); // Trả về lỗi 404 nếu không tìm thấy
-            }
-
-            return PartialView("OrderDetails", order); // Trả về PartialView chứa thông tin đơn hàng
+            var builder = new OrderBuilder(_db, id);
+            if (!builder.OrderExists()) return HttpNotFound();
+            return PartialView("OrderDetails", builder.Build());
         }
-
 
         [HttpPost]
         public JsonResult ConfirmOrder(int id)
         {
-            try
-            {
-                var order = _db.Orders.Find(id);
-                if (order != null)
-                {
-                    // Kiểm tra nếu đơn hàng đã bị hủy hoặc đã giao thì không cho thay đổi
-                    if (order.Status == "Đã hủy" || order.Status == "Đã giao")
-                    {
-                        return Json(new { success = false, message = "Không thể xác nhận đơn hàng đã bị hủy hoặc đã giao." });
-                    }
+            var builder = new OrderBuilder(_db, id);
+            if (!builder.OrderExists()) return Json(new { success = false, message = "Không tìm thấy đơn hàng." });
 
-                    order.Status = "Đã giao";
-                    _db.SaveChanges();
-                    return Json(new { success = true });
-                }
-                return Json(new { success = false, message = "Không tìm thấy đơn hàng." });
-            }
-            catch (Exception ex)
+            if (builder.GetOrderStatus() == "Đã hủy" || builder.GetOrderStatus() == "Đã giao")
             {
-                return Json(new { success = false, message = ex.InnerException?.Message ?? ex.Message });
+                return Json(new { success = false, message = "Không thể xác nhận đơn hàng đã bị hủy hoặc đã giao." });
             }
+
+            builder.ConfirmOrder().SaveChanges();
+            return Json(new { success = true });
         }
-
 
         [HttpPost]
         public JsonResult CancelOrder(int id)
         {
-            try
+            var builder = new OrderBuilder(_db, id);
+            if (!builder.OrderExists()) return Json(new { success = false, message = "Không tìm thấy đơn hàng." });
+
+            if (builder.GetOrderStatus() == "Đã hủy" || builder.GetOrderStatus() == "Đã giao")
             {
-                var order = _db.Orders.Find(id);
-                if (order != null)
-                {
-                    // Kiểm tra nếu đơn hàng đã bị hủy hoặc đã giao thì không cho thay đổi
-                    if (order.Status == "Đã hủy" || order.Status == "Đã giao")
-                    {
-                        return Json(new { success = false, message = "Không thể hủy đơn hàng đã bị hủy hoặc đã giao." });
-                    }
-
-                    order.Status = "Đã hủy";
-
-                    // Lấy danh sách sản phẩm trong đơn hàng
-                    var orderDetails = _db.OrderDetails.Where(od => od.OrderID == id).ToList();
-
-                    foreach (var item in orderDetails)
-                    {
-                        var product = _db.Products.Find(item.ProductID);
-                        if (product != null)
-                        {
-                            product.Stock += item.Quantity; // Hoàn trả số lượng sản phẩm
-                        }
-                    }
-
-                    _db.SaveChanges();
-                    return Json(new { success = true });
-                }
-                return Json(new { success = false, message = "Không tìm thấy đơn hàng." });
+                return Json(new { success = false, message = "Không thể hủy đơn hàng đã bị hủy hoặc đã giao." });
             }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = ex.InnerException?.Message ?? ex.Message });
-            }
+
+            builder.CancelOrder().SaveChanges();
+            return Json(new { success = true });
         }
     }
 }

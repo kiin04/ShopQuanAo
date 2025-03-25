@@ -26,7 +26,7 @@
                     $(document).ready(function () {
                         $("#search-input").on("input", function () {
                             var keyword = $(this).val();
-                            if (keyword.length >= 2) { // Chỉ tìm kiếm khi nhập từ 2 ký tự trở lên
+                            if (keyword.length >= 1) { // Chỉ tìm kiếm khi nhập từ 2 ký tự trở lên
                                 $.ajax({
                                     url: "/Search/GetSuggestions",
                                     type: "GET",
@@ -95,9 +95,10 @@
                         if (count > 0) {
                             $("#cart-count").text(count).show();
                         } else {
-                            $("#cart-count").hide();
+                            $("#cart-count").text(0).show();
                         }
                     }
+
 
                     $(document).on("click", ".add-to-cart", function (e) {
                         e.preventDefault();

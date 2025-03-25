@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebMusic.Models;
+using WebMusic.Models.Abstract_Factory;
 
 namespace WebMusic.Controllers
 {
@@ -49,6 +50,14 @@ namespace WebMusic.Controllers
 
             return RedirectToAction("Login", "Login");
         }
+
+        private readonly IOrderFactory _orderFactory;
+
+        public ProfileController(IOrderFactory orderFactory)
+        {
+            _orderFactory = orderFactory;
+        }
+
         public ActionResult OrderHistory()
         {
             if (Session["CurrentUserId"] == null)
@@ -57,10 +66,8 @@ namespace WebMusic.Controllers
             }
 
             int userId = (int)Session["CurrentUserId"];
-            var orders = _db.Orders
-                           .Where(o => o.CustomerID == userId)
-                           .OrderByDescending(o => o.OrderDate) // Sắp xếp mới nhất lên trên cùng
-                           .ToList();
+            var orders = _orderFactory.GetOrders(userId);
+            System.Diagnostics.Debug.WriteLine($"Lấy đơn hàng cho UserID: {userId}");
 
             return View(orders);
         }
@@ -72,15 +79,13 @@ namespace WebMusic.Controllers
                 return RedirectToAction("Login", "Login");
             }
 
-            var order = _db.Orders.Include("OrderDetails.Product")
-                                 .FirstOrDefault(o => o.OrderID == orderId);
-
+            var order = _orderFactory.GetOrderDetails(orderId);
             if (order == null)
             {
                 return HttpNotFound();
             }
 
-            return PartialView("OrderDetails", order); // Trả về partial view chứa thông tin chi tiết đơn hàng
+            return PartialView("OrderDetails", order);
         }
 
 

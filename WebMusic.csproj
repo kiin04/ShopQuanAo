@@ -197,8 +197,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Abstract Factory\EFOrderFactory.cs" />
+    <Compile Include="Models\Abstract Factory\IOrderFactory.cs" />
     <Compile Include="Models\Bridge\CustomerService.cs" />
     <Compile Include="Models\Bridge\ICustomerService.cs" />
+    <Compile Include="Models\BuilderPattern\OrderBuilder.cs" />
+    <Compile Include="Models\Commannd\AddCommentCommand.cs" />
+    <Compile Include="Models\Commannd\ICommand.cs" />
     <Compile Include="Models\Proxy\ProductProxy.cs" />
     <Compile Include="Models\State\SearchState.cs" />
     <Compile Include="Models\TemplateMethod\AdminRepository.cs" />

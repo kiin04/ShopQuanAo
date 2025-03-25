@@ -32,6 +32,8 @@ namespace WebMusic.Controllers
             }
 
             var cartItems = db.Carts.Where(c => c.CustomerID == customer.CustomerID).ToList();
+            // Cập nhật số lượng giỏ hàng vào session
+            UpdateCartCount(customer.CustomerID);
             Session["Cart"] = cartItems;
             return View(cartItems);
         }
@@ -115,7 +117,7 @@ namespace WebMusic.Controllers
             return Json(new { success = false, message = "Không tìm thấy sản phẩm." });
         }
 
-        private void UpdateCartCount(int customerId)
+        public void UpdateCartCount(int customerId)
         {
             var cartCount = db.Carts.Where(c => c.CustomerID == customerId).Sum(c => (int?)c.Quantity) ?? 0;
             Session["CartCount"] = cartCount;

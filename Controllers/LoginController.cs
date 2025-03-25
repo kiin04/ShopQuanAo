@@ -22,12 +22,17 @@ namespace WebMusic.Controllers
         [HttpPost]
         public ActionResult Login(string Email, string Password)
         {
+
             var visitor = new LoginHandler(Session);
 
             var customer = database.Customers.FirstOrDefault(c => c.Email == Email && c.PasswordHash == Password);
             if (customer != null)
             {
                 customer.Accept(visitor);
+
+                // Cập nhật số lượng giỏ hàng vào Session
+                UpdateCartCount(customer.CustomerID);
+
                 return RedirectToAction("Home", "Home");
             }
 
@@ -37,9 +42,17 @@ namespace WebMusic.Controllers
                 admin.Accept(visitor);
                 return RedirectToAction("Home", "Home");
             }
+            // Cập nhật số lượng giỏ hàng vào session sau khi đăng nhập
+            var cartCount = database.Carts.Where(c => c.CustomerID == customer.CustomerID).Sum(c => (int?)c.Quantity) ?? 0;
+            Session["CartCount"] = cartCount;
 
             ViewBag.error = "Tên đăng nhập hoặc mật khẩu không đúng";
             return View();
+        }
+        public void UpdateCartCount(int customerId)
+        {
+            var cartCount = database.Carts.Where(c => c.CustomerID == customerId).Sum(c => (int?)c.Quantity) ?? 0;
+            Session["CartCount"] = cartCount;
         }
 
         public ActionResult Register()
