@@ -51,12 +51,6 @@ namespace WebMusic.Controllers
             return RedirectToAction("Login", "Login");
         }
 
-        private readonly IOrderFactory _orderFactory;
-
-        public ProfileController(IOrderFactory orderFactory)
-        {
-            _orderFactory = orderFactory;
-        }
 
         public ActionResult OrderHistory()
         {
@@ -66,8 +60,10 @@ namespace WebMusic.Controllers
             }
 
             int userId = (int)Session["CurrentUserId"];
-            var orders = _orderFactory.GetOrders(userId);
-            System.Diagnostics.Debug.WriteLine($"Lấy đơn hàng cho UserID: {userId}");
+            var orders = _db.Orders
+                           .Where(o => o.CustomerID == userId)
+                           .OrderByDescending(o => o.OrderDate) // Sắp xếp mới nhất lên trên cùng
+                           .ToList();
 
             return View(orders);
         }
@@ -79,13 +75,15 @@ namespace WebMusic.Controllers
                 return RedirectToAction("Login", "Login");
             }
 
-            var order = _orderFactory.GetOrderDetails(orderId);
+            var order = _db.Orders.Include("OrderDetails.Product")
+                                 .FirstOrDefault(o => o.OrderID == orderId);
+
             if (order == null)
             {
                 return HttpNotFound();
             }
 
-            return PartialView("OrderDetails", order);
+            return PartialView("OrderDetails", order); // Trả về partial view chứa thông tin chi tiết đơn hàng
         }
 
 

@@ -97,6 +97,9 @@
     <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
       <HintPath>packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="PayPal, Version=1.9.1.0, Culture=neutral, PublicKeyToken=5b4afc1ccaef40fb, processorArchitecture=MSIL">
+      <HintPath>packages\PayPal.1.9.1\lib\net451\PayPal.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.4.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Buffers.4.6.0\lib\net462\System.Buffers.dll</HintPath>
@@ -197,13 +200,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Abstract Factory\EFOrderFactory.cs" />
-    <Compile Include="Models\Abstract Factory\IOrderFactory.cs" />
     <Compile Include="Models\Bridge\CustomerService.cs" />
     <Compile Include="Models\Bridge\ICustomerService.cs" />
     <Compile Include="Models\BuilderPattern\OrderBuilder.cs" />
     <Compile Include="Models\Commannd\AddCommentCommand.cs" />
     <Compile Include="Models\Commannd\ICommand.cs" />
+    <Compile Include="Models\PaypalConfiguration.cs" />
     <Compile Include="Models\Proxy\ProductProxy.cs" />
     <Compile Include="Models\State\SearchState.cs" />
     <Compile Include="Models\TemplateMethod\AdminRepository.cs" />
@@ -344,6 +346,7 @@
     <Content Include="Content\images\motorbike.png" />
     <Content Include="Content\images\not-found.png" />
     <Content Include="Content\images\pants.png" />
+    <Content Include="Content\images\paypal.png" />
     <Content Include="Content\images\profile1.png" />
     <Content Include="Content\images\refresh.png" />
     <Content Include="Content\images\shirt.png" />
@@ -440,6 +443,7 @@
     <Content Include="Views\Blog\DetailBlog3.cshtml" />
     <Content Include="Views\Blog\DetailBlog4.cshtml" />
     <Content Include="Views\Blog\DetailBlog5.cshtml" />
+    <Content Include="Views\Checkout\FailureView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

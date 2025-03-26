@@ -34,7 +34,36 @@
                 <option value="COD">Thanh toán khi nhận hàng (COD)</option>
                 <option value="Online">Thanh toán online (Ví điện tử / Thẻ ngân hàng)</option>
             </select>
+            <a href="/Checkout/PaymentWithPayPal" target="_blank" class="btn btn-success paypal-button">
+                <img src="~/Content/images/paypal.png"
+                     alt="Thanh toán qua PayPal" />
+            </a>
+            <style>
+                .paypal-button {
+                    display: inline-block;
+                    padding: 10px;
+                    border-radius: 8px;
+                    background-color: #ffc439; /* Màu vàng đặc trưng của PayPal */
+                    transition: background-color 0.3s, transform 0.2s;
+                    text-align: center;
+                }
 
+                    .paypal-button img {
+                        width: 150px;
+                        height: auto;
+                        display: block;
+                    }
+
+                    .paypal-button:hover {
+                        background-color: #ffb300; /* Màu vàng đậm khi hover */
+                        transform: scale(1.05); /* Hiệu ứng phóng to nhẹ */
+                    }
+
+                    .paypal-button:active {
+                        transform: scale(0.95); /* Nhấn giữ thì nút thu nhỏ */
+                    }
+
+            </style>
             <button type="submit" class="btn-confirm">Xác nhận đặt hàng</button>
         </form>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
