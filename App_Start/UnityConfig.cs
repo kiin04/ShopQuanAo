@@ -62,11 +62,16 @@ namespace WebMusic
 
             // Đăng ký Repository
             container.RegisterType<IProductRepository, Repositories.ProductRepository>();
+            container.RegisterType<IUserRepository, UserRepository>();
+            container.RegisterType<ICustomerRepository, WebMusic.Repositories.CustomerRepository>();
+            container.RegisterType<IOrderRepository, OrderRepository>();
 
             // Đăng ký Service
             container.RegisterType<IProductService, ProductService>();
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
+
+
         }
     }
 }

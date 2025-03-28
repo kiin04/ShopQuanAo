@@ -17,7 +17,7 @@ namespace WebMusic.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly IProductService _productService;
+        private readonly IProductService _productService; //Repository
         private readonly ShopQuanAoEntities _db; // Sử dụng ShopQuanAoEntities thay vì ApplicationDbContext
 
         // Constructor nhận IProductService từ Dependency Injection
@@ -85,7 +85,7 @@ namespace WebMusic.Controllers
             return View();
         }
 
-
+        //repo
         public ActionResult ManageProduct(int? page)
         {
             int pageSize = 10; // Số sản phẩm mỗi trang
@@ -178,7 +178,7 @@ namespace WebMusic.Controllers
             }
             return RedirectToAction("ManageProduct");
         }
-
+        //
 
         public ActionResult ManageCategory()
         {
@@ -258,7 +258,7 @@ namespace WebMusic.Controllers
             TempData["SuccessMessage"] = "Danh mục đã được xóa thành công!";
             return RedirectToAction("ManageCategory");
         }
-
+        //repo
         private readonly CustomerRepository _customerRepo = new CustomerRepository();
         private readonly AdminRepository _adminRepo = new AdminRepository();
         public ActionResult ManagerUser()
@@ -367,6 +367,7 @@ namespace WebMusic.Controllers
             }
             return RedirectToAction("ManagerUser");
         }
+        //
 
         public ActionResult ManagerOrder(int? page)
         {

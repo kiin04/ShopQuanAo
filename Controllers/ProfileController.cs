@@ -5,33 +5,53 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebMusic.Models;
-using WebMusic.Models.Abstract_Factory;
+using WebMusic.Repositories;
+
 
 namespace WebMusic.Controllers
 {
+    //DI
     public class ProfileController : Controller
     {
+        private readonly IUserRepository _userRepository;
+        private readonly ICustomerRepository _customerRepository;
+        private readonly IOrderRepository _orderRepository;
         private readonly ShopQuanAoEntities _db;
 
-        public ProfileController(ShopQuanAoEntities db)
+        public ProfileController(IUserRepository userRepository,
+                                 ICustomerRepository customerRepository,
+                                 IOrderRepository orderRepository,
+                                 ShopQuanAoEntities db)
         {
             _db = db;
+            _userRepository = userRepository;
+            _customerRepository = customerRepository;
+            _orderRepository = orderRepository;
         }
+
+        private int? GetCurrentUserId()
+        {
+            return Session["CurrentUserId"] as int?;
+        }
+        private string GetUserRole()
+        {
+            return Session["Role"]?.ToString();
+        }
+
 
         // GET: Profile
         public ActionResult ProfileUser()
         {
-            if (Session["CurrentUserId"] == null)
+            var userId = GetCurrentUserId();
+            if (userId == null)
             {
                 return RedirectToAction("Login", "Login");
             }
 
-            int userId = (int)Session["CurrentUserId"];
-            string role = Session["Role"]?.ToString();
-
+            string role = GetUserRole();
             if (role == "Admin")
             {
-                var admin = _db.Users.FirstOrDefault(u => u.UserID == userId);
+                var admin = _userRepository.GetUserById(userId.Value);
                 if (admin != null)
                 {
                     Session["Username"] = admin.Username ?? admin.Email;
@@ -40,7 +60,7 @@ namespace WebMusic.Controllers
             }
             else
             {
-                var customer = _db.Customers.FirstOrDefault(c => c.CustomerID == userId);
+                var customer = _customerRepository.GetCustomerById(userId.Value);
                 if (customer != null)
                 {
                     Session["FullName"] = customer.FullName ?? customer.Email;
@@ -50,7 +70,7 @@ namespace WebMusic.Controllers
 
             return RedirectToAction("Login", "Login");
         }
-
+        //
 
         public ActionResult OrderHistory()
         {
@@ -94,8 +114,13 @@ namespace WebMusic.Controllers
                 return RedirectToAction("Login", "Login");
             }
 
-            int userId = (int)Session["CurrentUserId"];
-            string role = Session["Role"]?.ToString();
+            int? userId = GetCurrentUserId();
+            string role = GetUserRole();
+
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
 
             if (role == "Admin")
             {
