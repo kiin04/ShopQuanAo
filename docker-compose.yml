@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  db-server:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: shop-sql-db
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=YourStrongPassword123!
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+      - ./db-init:/docker-entrypoint-initdb.d
+
+  shop-app:
+    build: .
+    container_name: shop-web-app
+    ports:
+      - "80:8080"
+    environment:
+      - ConnectionStrings__ShopQuanAoEntities=metadata=res://*/Models.Model1.csdl|res://*/Models.Model1.ssdl|res://*/Models.Model1.msl;provider=System.Data.SqlClient;provider connection string="data source=db-server;initial catalog=ShopQuanAo;user id=sa;password=YourStrongPassword123!;trustservercertificate=True;MultipleActiveResultSets=True;App=EntityFramework"
+    depends_on:
+      - db-server
+
+volumes:
+  sql_data:
