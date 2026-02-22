@@ -3,8 +3,8 @@ FROM mono:latest
 WORKDIR /app
 
 COPY . ./
-RUN nuget restore WebMusic.csproj
-RUN msbuild /p:Configuration=Release WebMusic.csproj
+RUN nuget restore WebMusic.csproj -PackagesDirectory ./packages
+RUN msbuild /p:Configuration=Release /p:OutputPath=./out WebMusic.csproj
 
 # Stage 2: Runtime
 EXPOSE 8080
