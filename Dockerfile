@@ -6,15 +6,13 @@ RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list && \
     apt-get update && \
     apt-get install -y mono-xsp4 && \
     rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
 
 COPY . ./
 RUN nuget restore WebMusic.csproj -PackagesDirectory ./packages
-RUN msbuild /p:Configuration=Release WebMusic.csproj
+RUN msbuild /p:Configuration=Release /p:OutputPath=./bin WebMusic.csproj
 
-RUN mkdir -p bin && cp bin/Release/*.dll bin/ 2>/dev/null || cp out/*.dll bin/
-RUN rm -rf obj out packages
+RUN rm -rf obj packages
 
 EXPOSE 8080
 CMD ["xsp4", "--port", "8080", "--nonstop", "--address", "0.0.0.0"]
