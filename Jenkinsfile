@@ -20,7 +20,7 @@ pipeline {
         stage('Deploy with Compose') {
             steps {
                 sh "docker-compose down || true"
-                sh "docker-compose up -d"
+                sh "docker-compose up -d --force-recreate"
             }
         }
         stage('Init SQL Database') {
