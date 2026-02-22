@@ -26,18 +26,19 @@ pipeline {
         stage('Init SQL Database') {
             steps {
                 script {
-                    echo "Đang đợi SQL Server khởi động..."
+                    echo "Waiting for SQL Server to start..."
                     sh "sleep 30" 
                     
-                    sh """
-                        docker exec -i shop-sql-db /opt/mssql-tools/bin/sqlcmd \
-                        -S localhost -U sa -P 'YourStrongPassword123!' \
-                        -Q "IF DB_ID('ShopQuanAo') IS NULL CREATE DATABASE ShopQuanAo"
+                   sh """
+                       docker exec -i shop-sql-db /opt/mssql-tools18/bin/sqlcmd \
+                       -S localhost -U sa -P 'YourStrongPassword123!' -C \
+                       -Q "IF DB_ID('ShopQuanAo') IS NULL CREATE DATABASE ShopQuanAo"
                     """
-                    sh """
-                        docker exec -i shop-sql-db /opt/mssql-tools/bin/sqlcmd \
-                        -S localhost -U sa -P 'YourStrongPassword123!' \
-                        -d ShopQuanAo -i /docker-entrypoint-initdb.d/data.sql
+                   echo "Importing data to ShopQuanAo..."
+                   sh """
+                       docker exec -i shop-sql-db /opt/mssql-tools18/bin/sqlcmd \
+                       -S localhost -U sa -P 'YourStrongPassword123!' -C \
+                       -d ShopQuanAo -i /docker-entrypoint-initdb.d/data.sql
                     """
                 }
             }
