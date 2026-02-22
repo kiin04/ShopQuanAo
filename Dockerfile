@@ -16,4 +16,4 @@ RUN msbuild /p:Configuration=Release /p:OutputPath=./out WebMusic.csproj
 RUN mkdir -p bin && cp out/*.dll bin/
 
 EXPOSE 8080
-CMD ["xsp4", "--port", "8080", "--nonstop", "--address", "0.0.0.0"]
+CMD ["/usr/bin/xsp4", "--port", "8080", "--nonstop", "--address", "0.0.0.0"]
