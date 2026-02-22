@@ -1,14 +1,11 @@
 # Stage 1: Build
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mono:latest
 WORKDIR /app
 
 COPY . ./
-RUN dotnet restore WebMusic.csproj
-RUN dotnet publish WebMusic.csproj -c Release -o out
+RUN nuget restore WebMusic.csprojj
+RUN msbuild /p:Configuration=Release WebMusic.csproj
 
 # Stage 2: Runtime
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
-WORKDIR /app
-COPY --from=build /app/out .
-EXPOSE 80
-ENTRYPOINT ["dotnet", "WebMusic.dll"]
+EXPOSE 8080
+CMD ["xsp4", "--port", "8080", "--nonstop"]
