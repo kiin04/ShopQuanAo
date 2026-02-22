@@ -3,7 +3,7 @@ FROM mono:latest
 WORKDIR /app
 
 COPY . ./
-RUN nuget restore WebMusic.csprojj
+RUN nuget restore WebMusic.csproj
 RUN msbuild /p:Configuration=Release WebMusic.csproj
 
 # Stage 2: Runtime
