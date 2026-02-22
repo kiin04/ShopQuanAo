@@ -11,6 +11,10 @@ COPY . ./
 
 RUN nuget restore WebMusic.csproj -PackagesDirectory ./packages
 RUN msbuild /p:Configuration=Release /p:OutputPath=./bin WebMusic.csproj
+RUN mkdir -p ./bin/Models && \
+    cp Models/*.csdl ./bin/Models/ 2>/dev/null || true && \
+    cp Models/*.ssdl ./bin/Models/ 2>/dev/null || true && \
+    cp Models/*.msl ./bin/Models/ 2>/dev/null || true
 
 RUN rm -rf obj out packages WebMusic.csproj WebMusic.sln Dockerfile Jenkinsfile
 
