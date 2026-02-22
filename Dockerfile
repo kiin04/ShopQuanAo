@@ -12,7 +12,7 @@ COPY . ./
 RUN nuget restore WebMusic.csproj -PackagesDirectory ./packages
 RUN msbuild /p:Configuration=Release /p:OutputPath=./bin WebMusic.csproj
 
-RUN rm -rf obj packages
+RUN rm -rf obj
 
 EXPOSE 8080
 CMD ["xsp4", "--port", "8080", "--nonstop", "--address", "0.0.0.0"]
